@@ -3,28 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fantasy Magique — Atelier Vidéo</title>
+<title>La magie d'Lpepo — Atelier Vidéo</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { width: 100%; min-height: 100%; overflow-x: hidden; }
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    background: #05030f;
-    color: #f0e8ff;
+    background: #030810;
+    color: #e8f0ff;
     min-height: 100vh; padding: 1.5rem 1rem 6rem; font-size: 15px; line-height: 1.5;
     max-width: 900px; margin: 0 auto;
     position: relative;
     isolation: isolate;
 }
 
+/* ═══ FOND 3D ═══ */
 #bg3d {
     position: fixed; inset: 0; z-index: -3; overflow: hidden;
     perspective: 800px; perspective-origin: 50% 40%;
-    background: radial-gradient(ellipse at 50% 20%, #1a0f2e 0%, #0a0618 45%, #05030f 100%);
+    background: radial-gradient(ellipse at 50% 20%, #0f1a2e 0%, #06101a 45%, #030810 100%);
 }
 #bg3d .grid {
     position: absolute; left: -50%; top: -10%; width: 200%; height: 200%;
-       background-image:
+    background-image:
         linear-gradient(rgba(74,158,255,0.4) 2px, transparent 2px),
         linear-gradient(90deg, rgba(94,184,255,0.3) 2px, transparent 2px);
     background-size: 90px 90px, 90px 90px;
@@ -50,19 +51,152 @@ body {
 @keyframes gridGlow { 0% { opacity: 0.5; } 100% { opacity: 0.9; } }
 
 #bg3d .halo { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; mix-blend-mode: screen; }
-#bg3d .halo.h1 { background: radial-gradient(circle, rgba(74,158,255,0.5), transparent 70%); }    
+#bg3d .halo.h1 { width: 400px; height: 400px; top: -100px; left: 10%;
+    background: radial-gradient(circle, rgba(74,158,255,0.5), transparent 70%);
     animation: haloFloat1 18s ease-in-out infinite; }
-#bg3d .halo.h2 { background: radial-gradient(circle, rgba(94,184,255,0.4), transparent 70%); }
+#bg3d .halo.h2 { width: 500px; height: 500px; bottom: -150px; right: 5%;
+    background: radial-gradient(circle, rgba(94,184,255,0.4), transparent 70%);
     animation: haloFloat2 22s ease-in-out infinite; }
-#bg3d .halo.h3 { background: radial-gradient(circle, rgba(200,220,255,0.3), transparent 70%); }
+#bg3d .halo.h3 { width: 300px; height: 300px; top: 40%; left: 45%;
+    background: radial-gradient(circle, rgba(200,220,255,0.3), transparent 70%);
     animation: haloFloat3 26s ease-in-out infinite; }
 @keyframes haloFloat1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(80px, 60px) scale(1.15); } }
 @keyframes haloFloat2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-70px, -50px) scale(1.2); } }
 @keyframes haloFloat3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px, 40px) scale(1.1); } }
 
+/* ═══ CANVAS ═══ */
 #circuitCanvas { position: fixed; inset: 0; z-index: -2; pointer-events: none; mix-blend-mode: screen; opacity: 0.7; }
 #smokeCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; mix-blend-mode: screen; opacity: 0.55; }
 
+/* ═══ ANIMATIONS LATÉRALES ═══ */
+#sideEffects {
+    position: fixed; inset: 0; z-index: -2;
+    pointer-events: none; overflow: hidden;
+}
+#sideEffects .beam {
+    position: absolute; top: -20%;
+    width: 2px; height: 140%;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(74,158,255,0.6) 20%,
+        rgba(94,184,255,0.9) 50%,
+        rgba(74,158,255,0.6) 80%,
+        transparent 100%);
+    filter: blur(1px);
+    animation: beamFlow 8s ease-in-out infinite;
+    opacity: 0.4;
+}
+#sideEffects .beam.b1 { left: 4%; animation-delay: 0s; }
+#sideEffects .beam.b2 { right: 4%; animation-delay: 1.5s; }
+#sideEffects .beam.b3 { left: 9%; animation-delay: 3s; height: 100%; opacity: 0.25; }
+#sideEffects .beam.b4 { right: 9%; animation-delay: 4.5s; height: 100%; opacity: 0.25; }
+@keyframes beamFlow {
+    0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.3; }
+    50%      { transform: translateY(-10%) scaleY(1.1); opacity: 0.7; }
+}
+
+#sideEffects .spark {
+    position: absolute; width: 4px; height: 4px; border-radius: 50%;
+    background: #5eb8ff;
+    box-shadow: 0 0 10px #4a9eff, 0 0 20px #4a9eff;
+    animation: sparkFloat 6s ease-in-out infinite;
+}
+#sideEffects .spark.s1 { left: 3%;  top: 20%; animation-delay: 0s; }
+#sideEffects .spark.s2 { left: 6%;  top: 60%; animation-delay: 1s; background: #a8d8ff; }
+#sideEffects .spark.s3 { right: 5%; top: 30%; animation-delay: 2s; }
+#sideEffects .spark.s4 { right: 8%; top: 75%; animation-delay: 3s; background: #a8d8ff; }
+#sideEffects .spark.s5 { left: 2%;  top: 85%; animation-delay: 4s; }
+#sideEffects .spark.s6 { right: 2%; top: 15%; animation-delay: 5s; background: #ffd966; }
+@keyframes sparkFloat {
+    0%, 100% { transform: translateY(0); opacity: 0.3; }
+    50%      { transform: translateY(-40px); opacity: 1; }
+}
+
+#sideEffects .shape {
+    position: absolute; width: 60px; height: 60px;
+    border: 1px solid rgba(74,158,255,0.3);
+    transform: rotate(45deg);
+    animation: shapeRotate 12s linear infinite;
+    opacity: 0.25;
+}
+#sideEffects .shape.sh1 { left: 1%;  top: 25%; }
+#sideEffects .shape.sh2 { right: 1%; top: 55%; animation-direction: reverse; }
+#sideEffects .shape.sh3 { left: 2%;  top: 70%; animation-duration: 18s; }
+@keyframes shapeRotate {
+    0%   { transform: rotate(45deg) scale(1); opacity: 0.15; }
+    50%  { transform: rotate(225deg) scale(1.15); opacity: 0.35; }
+    100% { transform: rotate(405deg) scale(1); opacity: 0.15; }
+}
+
+/* ═══ ÉCLAIRS SUR LES CÔTÉS ═══ */
+#sideEffects .spark-bolt {
+    position: absolute; width: 40px; height: 70px;
+    pointer-events: none; opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(74,158,255,0.9)) drop-shadow(0 0 14px rgba(94,184,255,0.5));
+    animation: boltFlash 5s ease-in-out infinite;
+}
+#sideEffects .spark-bolt.sb1 { left: 2%;  top: 10%; animation-delay: 0s; }
+#sideEffects .spark-bolt.sb2 { left: 6%;  top: 40%; animation-delay: 1.8s; transform: scale(0.8) rotate(15deg); }
+#sideEffects .spark-bolt.sb3 { left: 3%;  top: 72%; animation-delay: 3.6s; transform: scale(1.2) rotate(-10deg); }
+#sideEffects .spark-bolt.sb4 { right: 2%; top: 18%; animation-delay: 0.9s; transform: scale(0.9) rotate(-15deg); }
+#sideEffects .spark-bolt.sb5 { right: 6%; top: 48%; animation-delay: 2.7s; transform: scale(1.1) rotate(12deg); }
+#sideEffects .spark-bolt.sb6 { right: 3%; top: 82%; animation-delay: 4.4s; transform: scale(0.85) rotate(-8deg); }
+#sideEffects .spark-bolt::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%234a9eff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='0.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+}
+#sideEffects .spark-bolt::after {
+    content: ''; position: absolute; inset: -4px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'/></svg>");
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    filter: blur(3px);
+    animation: boltGlow 5s ease-in-out infinite;
+}
+@keyframes boltFlash {
+    0%, 88%, 100% { opacity: 0; }
+    89%           { opacity: 0.9; }
+    90%           { opacity: 0.2; }
+    91%           { opacity: 1; }
+    93%           { opacity: 0.6; }
+    95%           { opacity: 0.9; }
+    97%           { opacity: 0; }
+}
+@keyframes boltGlow {
+    0%, 88%, 100% { opacity: 0; }
+    89%, 97%      { opacity: 1; }
+}
+
+/* ═══ PSEUDO LPEPO ═══ */
+#lpepoPopup {
+    position: fixed; top: 50%; left: 50%;
+    font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'Anton', sans-serif;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    font-weight: 900;
+    font-style: normal;
+    letter-spacing: 0.08em;
+    color: #4a9eff;
+    text-shadow:
+        2px 2px 0 #1a4a8a,
+        4px 4px 0 #0d2a55,
+        6px 6px 0 #06152b,
+        8px 8px 20px rgba(0,0,0,0.9),
+        0 0 30px rgba(74,158,255,0.8),
+        0 0 60px rgba(94,184,255,0.5);
+    z-index: 9999;
+    pointer-events: none; opacity: 0;
+    white-space: nowrap; user-select: none;
+    will-change: opacity, transform;
+    transform-origin: center center;
+}
+#lpepoPopup.show { animation: lpepoFlash 4s ease-in-out forwards; }
+@keyframes lpepoFlash {
+    0%   { opacity: 0;    transform: rotate(var(--rot, -12deg)) scale(0.85); }
+    35%  { opacity: 0.45; transform: rotate(var(--rot, -12deg)) scale(1); }
+    60%  { opacity: 0.45; transform: rotate(var(--rot, -12deg)) scale(1); }
+    100% { opacity: 0;    transform: rotate(var(--rot, -12deg)) scale(1.15); }
+}
+/* ═══ HEADER ═══ */
 header { margin-bottom: 1.5rem; text-align: center; position: relative; z-index: 1; }
 h1 {
     font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem;
@@ -78,6 +212,7 @@ h1 {
 @keyframes titleShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .subtitle { font-size: 0.85rem; color: #8fa8c8; font-style: italic; }
 
+/* ═══ PANNEAUX ═══ */
 .info-banner, .panel, .section, .upload-zone, .queue-item, .gallery-item {
     position: relative; z-index: 1;
     transform-style: preserve-3d;
@@ -95,7 +230,7 @@ h1 {
 .info-banner strong { color: #ffd966; }
 
 .panel {
-    background: linear-gradient(145deg, rgba(30,20,55,0.85), rgba(20,12,40,0.9));
+    background: linear-gradient(145deg, rgba(20,32,55,0.85), rgba(12,20,40,0.9));
     border: 1px solid rgba(74,158,255,0.25);
     border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1rem;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
@@ -105,8 +240,8 @@ h1 {
 
 .api-key-input {
     width: 100%; padding: 0.85rem 1rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(10,6,25,0.7);
-    color: #f0e8ff; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.6rem;
+    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
+    color: #e8f0ff; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.6rem;
 }
 .api-key-input:focus { outline: none; border-color: #4a9eff; }
 
@@ -120,11 +255,11 @@ h1 {
 
 .status-line {
     font-size: 0.78rem; padding: 0.6rem 0.85rem; border-radius: 8px; margin-bottom: 0.5rem;
-    background: rgba(10,6,25,0.6); color: #8fa8c8;
+    background: rgba(6,16,26,0.6); color: #8fa8c8;
     display: flex; align-items: center; gap: 0.5rem;
 }
 .status-line.ok { background: rgba(74,222,128,0.15); color: #4ade80; font-weight: 600; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #6a5a8a; flex-shrink: 0; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #5a6a8a; flex-shrink: 0; }
 .status-line.ok .status-dot { background: #4ade80; }
 
 .hint { font-size: 0.72rem; color: #8fa8c8; margin-top: 0.4rem; }
@@ -134,7 +269,7 @@ h1 {
     border: 2px dashed rgba(74,158,255,0.35); border-radius: 14px;
     padding: 2rem 1rem; text-align: center; cursor: pointer;
     margin-bottom: 1rem;
-    background: linear-gradient(145deg, rgba(30,20,55,0.7), rgba(20,12,40,0.85));
+    background: linear-gradient(145deg, rgba(20,32,55,0.7), rgba(12,20,40,0.85));
     transition: all 0.25s;
 }
 .upload-zone:hover, .upload-zone:active {
@@ -151,7 +286,7 @@ h1 {
 }
 .image-card {
     position: relative; border-radius: 10px; overflow: hidden;
-    border: 1px solid rgba(74,158,255,0.25); background: #251a40; aspect-ratio: 9/16;
+    border: 1px solid rgba(74,158,255,0.25); background: #1a2540; aspect-ratio: 9/16;
 }
 .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .image-card .remove-btn {
@@ -162,7 +297,7 @@ h1 {
 }
 
 .section {
-    background: linear-gradient(145deg, rgba(30,20,55,0.85), rgba(20,12,40,0.9));
+    background: linear-gradient(145deg, rgba(20,32,55,0.85), rgba(12,20,40,0.9));
     border: 1px solid rgba(74,158,255,0.25);
     border-radius: 14px; margin-bottom: 1rem; overflow: hidden;
 }
@@ -175,7 +310,7 @@ h1 {
     font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
     color: #8fa8c8; font-weight: 600;
 }
-.chevron { font-size: 0.7rem; color: #6a5a8a; transition: transform 0.2s; }
+.chevron { font-size: 0.7rem; color: #5a6a8a; transition: transform 0.2s; }
 .section.open .chevron { transform: rotate(180deg); }
 .section-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
 .section.open .section-body { max-height: 3000px; }
@@ -183,8 +318,8 @@ h1 {
 
 .prompt-main {
     width: 100%; padding: 0.85rem 1rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(10,6,25,0.7);
-    color: #f0e8ff; font-family: inherit; font-size: 0.9rem;
+    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
+    color: #e8f0ff; font-family: inherit; font-size: 0.9rem;
     min-height: 110px; resize: vertical; line-height: 1.5;
 }
 .prompt-main:focus { outline: none; border-color: #4a9eff; }
@@ -192,10 +327,10 @@ h1 {
 .prompt-presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
 .prompt-preset {
     padding: 0.4rem 0.8rem; border-radius: 16px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(37,26,64,0.7);
+    border: 1px solid rgba(74,158,255,0.25); background: rgba(26,37,64,0.7);
     font-size: 0.72rem; cursor: pointer; color: #8fa8c8;
 }
-.prompt-preset:hover { border-color: #4a9eff; color: #f0e8ff; }
+.prompt-preset:hover { border-color: #4a9eff; color: #e8f0ff; }
 
 .styles-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -203,7 +338,7 @@ h1 {
 }
 .style-card {
     padding: 0.75rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(37,26,64,0.7);
+    border: 1px solid rgba(74,158,255,0.25); background: rgba(26,37,64,0.7);
     cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
 }
 .style-card.selected {
@@ -227,7 +362,7 @@ h1 {
     border: 2px dashed rgba(74,158,255,0.3); background: transparent;
     text-align: center; cursor: pointer; font-size: 0.82rem; color: #8fa8c8;
 }
-.no-style.selected { border-color: #4a9eff; border-style: solid; background: rgba(74,158,255,0.12); color: #f0e8ff; font-weight: 600; }
+.no-style.selected { border-color: #4a9eff; border-style: solid; background: rgba(74,158,255,0.12); color: #e8f0ff; font-weight: 600; }
 
 .control-row { margin-bottom: 0.9rem; }
 .control-label {
@@ -236,8 +371,8 @@ h1 {
 }
 select {
     width: 100%; padding: 0.7rem 0.9rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(10,6,25,0.7);
-    color: #f0e8ff; font-family: inherit; font-size: 0.88rem;
+    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
+    color: #e8f0ff; font-family: inherit; font-size: 0.88rem;
 }
 select:focus { outline: none; border-color: #4a9eff; }
 
@@ -252,7 +387,7 @@ select:focus { outline: none; border-color: #4a9eff; }
 
 .btn-stop {
     width: 100%; padding: 0.8rem; border-radius: 12px;
-    border: 1px solid #f87171; background: rgba(20,12,40,0.8);
+    border: 1px solid #f87171; background: rgba(12,20,40,0.8);
     color: #f87171; font-size: 0.85rem; font-weight: 600;
     cursor: pointer; margin-bottom: 1rem; display: none;
 }
@@ -263,7 +398,7 @@ select:focus { outline: none; border-color: #4a9eff; }
     display: flex; align-items: center; gap: 0.8rem;
     padding: 0.7rem 0.8rem; border-radius: 10px;
     border: 1px solid rgba(74,158,255,0.2); margin-bottom: 0.4rem;
-    background: rgba(26,18,48,0.85); font-size: 0.82rem;
+    background: rgba(15,26,46,0.85); font-size: 0.82rem;
 }
 .queue-item.done { border-color: #4ade80; }
 .queue-item.failed { border-color: #f87171; }
@@ -274,7 +409,7 @@ select:focus { outline: none; border-color: #4a9eff; }
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; }
 .gallery-item { border-radius: 12px; overflow: hidden; border: 1px solid rgba(74,158,255,0.25); background: #000; }
 .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
-.gallery-item .g-caption { padding: 0.4rem 0.6rem; background: rgba(26,18,48,0.95); font-size: 0.7rem; color: #8fa8c8; }
+.gallery-item .g-caption { padding: 0.4rem 0.6rem; background: rgba(15,26,46,0.95); font-size: 0.7rem; color: #8fa8c8; }
 
 .status-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -294,7 +429,7 @@ select:focus { outline: none; border-color: #4a9eff; }
 .toast {
     position: fixed; top: 1.5rem; left: 50%;
     transform: translateX(-50%) translateY(-100px);
-    background: #f0e8ff; color: #1a1230;
+    background: #e8f0ff; color: #0f1a2e;
     padding: 0.85rem 1.4rem; border-radius: 12px;
     font-size: 0.85rem; font-weight: 600;
     z-index: 1000; opacity: 0;
@@ -318,9 +453,9 @@ select:focus { outline: none; border-color: #4a9eff; }
     text-shadow:
         1px 1px 0 rgba(255,217,102,0.6),
         2px 2px 0 rgba(74,158,255,0.55),
-        3px 3px 0 rgba(120,80,200,0.5),
-        4px 4px 0 rgba(80,50,150,0.45),
-        5px 5px 0 rgba(50,30,100,0.4),
+        3px 3px 0 rgba(50,90,180,0.5),
+        4px 4px 0 rgba(30,60,140,0.45),
+        5px 5px 0 rgba(15,30,100,0.4),
         6px 6px 8px rgba(0,0,0,0.6);
 }
 @keyframes signatureShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
@@ -330,231 +465,49 @@ select:focus { outline: none; border-color: #4a9eff; }
     opacity: 0.01; pointer-events: none; z-index: -1;
 }
 
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.15rem;
-        line-height: 1.25;
-        letter-spacing: 0.01em;
-    }
-    #bg3d .grid { background-size: 60px 60px, 60px 60px; }
+/* ═══ MODE MOBILE AUTO ═══ */
+@media (max-width: 768px) {
+    h1 { font-size: 1.15rem; line-height: 1.25; letter-spacing: 0.01em; }
+    #bg3d .grid { background-size: 60px 60px, 60px 60px; animation-duration: 40s; }
     .signature span { font-size: 1.05rem; letter-spacing: 0.04em; }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   ANIMATIONS LATÉRALES — remplissent les côtés
-   ═══════════════════════════════════════════════════════════ */
-#sideEffects {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-/* Lignes lumineuses verticales animées */
-#sideEffects .beam {
-    position: absolute;
-    top: -20%;
-    width: 2px;
-    height: 140%;
-    background: linear-gradient(to bottom,
-        transparent 0%,
-        rgba(74,158,255,0.6) 20%,
-        rgba(94,184,255,0.9) 50%,
-        rgba(74,158,255,0.6) 80%,
-        transparent 100%);
-    filter: blur(1px);
-    animation: beamFlow 8s ease-in-out infinite;
-    opacity: 0.4;
-}
-#sideEffects .beam.b1 { left: 4%; animation-delay: 0s; }
-#sideEffects .beam.b2 { right: 4%; animation-delay: 1.5s; }
-#sideEffects .beam.b3 { left: 9%; animation-delay: 3s; height: 100%; opacity: 0.25; }
-#sideEffects .beam.b4 { right: 9%; animation-delay: 4.5s; height: 100%; opacity: 0.25; }
-
-@keyframes beamFlow {
-    0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.3; }
-    50%      { transform: translateY(-10%) scaleY(1.1); opacity: 0.7; }
-}
-
-/* Petits points lumineux qui montent et descendent sur les côtés */
-#sideEffects .spark {
-    position: absolute;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: #5eb8ff;
-    box-shadow: 0 0 10px #4a9eff, 0 0 20px #4a9eff;
-    animation: sparkFloat 6s ease-in-out infinite;
-}
-#sideEffects .spark.s1 { left: 3%;  top: 20%; animation-delay: 0s; }
-#sideEffects .spark.s2 { left: 6%;  top: 60%; animation-delay: 1s; background: #a8d8ff; }
-#sideEffects .spark.s3 { right: 5%; top: 30%; animation-delay: 2s; }
-#sideEffects .spark.s4 { right: 8%; top: 75%; animation-delay: 3s; background: #a8d8ff; }
-#sideEffects .spark.s5 { left: 2%;  top: 85%; animation-delay: 4s; }
-#sideEffects .spark.s6 { right: 2%; top: 15%; animation-delay: 5s; background: #ffd966; }
-
-@keyframes sparkFloat {
-    0%, 100% { transform: translateY(0); opacity: 0.3; }
-    50%      { transform: translateY(-40px); opacity: 1; }
-}
-
-/* Hexagones / losanges décoratifs sur les côtés */
-#sideEffects .shape {
-    position: absolute;
-    width: 60px; height: 60px;
-    border: 1px solid rgba(74,158,255,0.3);
-    transform: rotate(45deg);
-    animation: shapeRotate 12s linear infinite;
-    opacity: 0.25;
-}
-#sideEffects .shape.sh1 { left: 1%;  top: 25%; }
-#sideEffects .shape.sh2 { right: 1%; top: 55%; animation-direction: reverse; }
-#sideEffects .shape.sh3 { left: 2%;  top: 70%; animation-duration: 18s; }
-
-@keyframes shapeRotate {
-    0%   { transform: rotate(45deg) scale(1); opacity: 0.15; }
-    50%  { transform: rotate(225deg) scale(1.15); opacity: 0.35; }
-    100% { transform: rotate(405deg) scale(1); opacity: 0.15; }
-}
-
-/* Masquer sur très petit écran mobile pour ne pas surcharger */
-@media (max-width: 600px) {
+    #bg3d .halo { filter: blur(40px); }
+    #bg3d .halo.h3 { display: none; }
     #sideEffects .beam.b3,
     #sideEffects .beam.b4,
     #sideEffects .shape { display: none; }
+    #sideEffects .spark-bolt.sb3,
+    #sideEffects .spark-bolt.sb4,
+    #sideEffects .spark-bolt.sb5,
+    #sideEffects .spark-bolt.sb6 { display: none; }
+    .btn-primary { animation: none; }
+    .panel, .section, .upload-zone, .queue-item, .gallery-item { transition: none; }
+    #smokeCanvas { opacity: 0.35; }
+    #circuitCanvas { opacity: 0.5; }
 }
 
-
-/* ═══════════════════════════════════════════════════════════
-   ANIMATION PSEUDO "Lpepo" — apparaît sur les côtés aléatoirement
-   ═══════════════════════════════════════════════════════════ */
-#lpepoPopup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-size: clamp(2rem, 7vw, 4.5rem);
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: 0.05em;
-    color: #4a9eff;
-    text-shadow:
-        2px 2px 0 #1a4a8a,
-        4px 4px 0 #0d2a55,
-        6px 6px 0 #06152b,
-        8px 8px 20px rgba(0,0,0,0.9),
-        0 0 30px rgba(74,158,255,0.8),
-        0 0 60px rgba(94,184,255,0.5);
-    z-index: 999;
-    pointer-events: none;
-    opacity: 0;
-    white-space: nowrap;
-    user-select: none;
-    will-change: opacity, transform;
-    transform-origin: center center;
-}
-
-#lpepoPopup.show {
-    animation: lpepoFlash 2s ease-out forwards;
-}
-
-@keyframes lpepoFlash {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) rotate(var(--rot, -12deg)) scale(0.5);
-    }
-    15% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rot, -12deg)) scale(1.15);
-    }
-    25% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rot, -12deg)) scale(1);
-    }
-    75% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rot, -12deg)) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) rotate(var(--rot, -12deg)) scale(1.3);
-    }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   PETITS ÉCLAIRS SUR LES CÔTÉS
-   ═══════════════════════════════════════════════════════════ */
-#sideEffects .spark-bolt {
-    position: absolute;
-    width: 40px;
-    height: 70px;
-    pointer-events: none;
-    opacity: 0;
-    filter: drop-shadow(0 0 6px rgba(74,158,255,0.9)) drop-shadow(0 0 14px rgba(94,184,255,0.5));
-    animation: boltFlash 5s ease-in-out infinite;
-}
-
-/* Position des 6 éclairs (3 à gauche, 3 à droite) */
-#sideEffects .spark-bolt.sb1 { left: 2%;  top: 10%; animation-delay: 0s; }
-#sideEffects .spark-bolt.sb2 { left: 6%;  top: 40%; animation-delay: 1.8s; }
-#sideEffects .spark-bolt.sb3 { left: 3%;  top: 72%; animation-delay: 3.6s; }
-#sideEffects .spark-bolt.sb4 { right: 2%; top: 18%; animation-delay: 0.9s; }
-#sideEffects .spark-bolt.sb5 { right: 6%; top: 48%; animation-delay: 2.7s; }
-#sideEffects .spark-bolt.sb6 { right: 3%; top: 82%; animation-delay: 4.4s; }
-
-/* Variantes de taille et orientation */
-#sideEffects .spark-bolt.sb2 { transform: scale(0.8) rotate(15deg); }
-#sideEffects .spark-bolt.sb3 { transform: scale(1.2) rotate(-10deg); }
-#sideEffects .spark-bolt.sb4 { transform: scale(0.9) rotate(-15deg); }
-#sideEffects .spark-bolt.sb5 { transform: scale(1.1) rotate(12deg); }
-#sideEffects .spark-bolt.sb6 { transform: scale(0.85) rotate(-8deg); }
-
-/* Le tracé du zigzag en SVG stylisé via ::before */
-#sideEffects .spark-bolt::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%234a9eff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='0.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Animation d'apparition/disparition rapide */
-@keyframes boltFlash {
-    0%, 88%, 100% { opacity: 0; }
-    89%           { opacity: 0.9; }
-    90%           { opacity: 0.2; }
-    91%           { opacity: 1; }
-    93%           { opacity: 0.6; }
-    95%           { opacity: 0.9; }
-    97%           { opacity: 0; }
-}
-
-/* Deuxième couche pour un effet de double-flash */
-#sideEffects .spark-bolt::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'/></svg>");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: blur(3px);
-    animation: boltGlow 5s ease-in-out infinite;
-}
-
-@keyframes boltGlow {
-    0%, 88%, 100% { opacity: 0; }
-    89%, 97%      { opacity: 1; }
-}
-
+/* ═══ MODE LÉGER (activé manuellement) ═══ */
+body.light-mode #circuitCanvas,
+body.light-mode #sideEffects { display: none !important; }
+body.light-mode #smokeCanvas { opacity: 0.25 !important; }
+body.light-mode #bg3d .grid { animation-duration: 60s !important; }
+body.light-mode #bg3d .grid::before { animation: none !important; }
+body.light-mode #bg3d .halo { animation: none !important; opacity: 0.4 !important; }
+body.light-mode .btn-primary { animation: none !important; }
+body.light-mode #lpepoPopup { display: none !important; }
 </style>
 </head>
 
 <body>
 
+<!-- FOND 3D -->
 <div id="bg3d">
+    <div class="grid"></div>
+    <div class="halo h1"></div>
+    <div class="halo h2"></div>
+    <div class="halo h3"></div>
+</div>
+
+<!-- EFFETS LATÉRAUX + ÉCLAIRS -->
 <div id="sideEffects">
     <div class="beam b1"></div>
     <div class="beam b2"></div>
@@ -577,24 +530,23 @@ select:focus { outline: none; border-color: #4a9eff; }
     <div class="spark-bolt sb5"></div>
     <div class="spark-bolt sb6"></div>
 </div>
-    <div class="grid"></div>
-    <div class="halo h1"></div>
-    <div class="halo h2"></div>
-    <div class="halo h3"></div>
-</div>
 
+<!-- CANVAS -->
 <canvas id="circuitCanvas"></canvas>
 <canvas id="smokeCanvas"></canvas>
 
+<!-- HEADER -->
 <header>
     <h1>⚡ La magie d'Lpepo et de L'Intelligence Artificielle ⚡</h1>
-    <p class="subtitle">Donnez vie à vos images enchantées</p>
+    <p class="subtitle">Donnez vie à vos images</p>
 </header>
 
+<!-- INFO BANNER -->
 <div class="info-banner">
     <strong>Comment ça marche :</strong> Ajoutez vos images, choisissez un thème visuel, l'IA transforme chaque photo en <strong>scène fantastique animée</strong> - fées, dragons, poussière d'étoiles, personnage magique.. Format <strong>portrait 9:16</strong> et format <strong>paysage 16:9</strong>.
 </div>
 
+<!-- CLÉ API -->
 <div class="panel" id="api-panel">
     <input type="password" class="api-key-input" id="api-key-input"
            placeholder="Collez votre clé API ici (sk-...)" autocomplete="off" spellcheck="false">
@@ -608,32 +560,35 @@ select:focus { outline: none; border-color: #4a9eff; }
     </div>
 </div>
 
+<!-- UPLOAD -->
 <div class="upload-zone" id="upload-zone">
     <input type="file" id="file-input" accept="image/*" multiple>
     <div class="upload-icon">＋</div>
     <div class="upload-text">Cliquez ici pour ajouter vos images</div>
-    <div class="upload-hint">Autant que vous voulez — chacune deviendra une vidéo magique</div>
+    <div class="upload-hint">Autant que vous voulez — chacune deviendra une vidéo</div>
 </div>
 
 <div class="images-grid" id="images-grid"></div>
 
+<!-- SECTION PROMPT -->
 <div class="section open" id="section-prompt">
     <div class="section-header" data-toggle="section-prompt">
-        <span class="section-title">✍️ Votre vision magique</span>
+        <span class="section-title">✍️ Votre vision</span>
         <span class="chevron">▼</span>
     </div>
     <div class="section-body">
         <div class="section-content">
             <textarea class="prompt-main" id="main-prompt"
-                placeholder="Décrivez votre vision fantastique. Exemple : « Donne vie à cette scène. Des fées dansent autour du sujet dans une traînée de poussière d'étoile. Un dragon traverse le ciel violet. Lumière irréelle. Garde chaque sujet identique à la photo. »"></textarea>
+                placeholder="Décrivez votre vision. Exemple : « Donne vie à cette scène. Des fées dansent autour du sujet dans une traînée de poussière d'étoile. Un dragon traverse le ciel violet. Lumière irréelle. Garde chaque sujet identique à la photo. »"></textarea>
             <div class="prompt-presets" id="prompt-presets"></div>
         </div>
     </div>
 </div>
 
+<!-- SECTION STYLE -->
 <div class="section" id="section-style">
     <div class="section-header" data-toggle="section-style">
-        <span class="section-title">🔮 Sortilège visuel</span>
+        <span class="section-title">🎨 Thème visuel</span>
         <span class="chevron">▼</span>
     </div>
     <div class="section-body">
@@ -643,6 +598,14 @@ select:focus { outline: none; border-color: #4a9eff; }
     </div>
 </div>
 
+<!-- BOUTON MODE LÉGER -->
+<div style="text-align: center; margin-bottom: 1rem; position: relative; z-index: 1;">
+    <button type="button" id="light-mode-btn" style="background: rgba(74,158,255,0.15); border: 1px solid rgba(74,158,255,0.4); color: #4a9eff; padding: 0.6rem 1.2rem; border-radius: 10px; font-family: inherit; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">
+        ⚡ Activer le mode léger
+    </button>
+</div>
+
+<!-- SECTION TECHNIQUE -->
 <div class="section" id="section-tech">
     <div class="section-header" data-toggle="section-tech">
         <span class="section-title">📷 Réglages techniques</span>
@@ -658,15 +621,17 @@ select:focus { outline: none; border-color: #4a9eff; }
                 </select>
             </div>
             <div class="control-row">
+                <label class="control-label">Qualité vidéo</label>
+                <select id="resolution-select">
+                    <option value="480p">480p — vidéos longues (jusqu'à 40s)</option>
+                    <option value="720p" selected>720p — équilibré (jusqu'à 20s)</option>
+                    <option value="1080p">1080p — HD (jusqu'à 10s)</option>
+                </select>
+            </div>
+            <div class="control-row">
                 <label class="control-label">Durée</label>
                 <select id="duration-select">
-                    <option value="121">5 secondes</option>
-                    <option value="153" selected>6,4 secondes</option>
-                    <option value="241">10 secondes</option>
-                    <option value="361">15 secondes</option>
-                    <option value="721">30 secondes</option>
-                    <option value="1081">45 secondes</option>
-                    <option value="1441">60 secondes</option>
+                    <!-- Les options sont générées dynamiquement en JS -->
                 </select>
             </div>
             <div class="control-row">
@@ -691,29 +656,40 @@ select:focus { outline: none; border-color: #4a9eff; }
     </div>
 </div>
 
-<button type="button" class="btn-primary" id="generate-btn" disabled>✨ Lancer les sortilèges</button>
+<!-- BOUTONS -->
+<button type="button" class="btn-primary" id="generate-btn" disabled>✨ Créer les vidéos</button>
 <button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter</button>
 
+<!-- FILE D'ATTENTE -->
 <div class="queue" id="queue" style="display:none;"></div>
 
+<!-- GALERIE -->
 <div class="gallery" id="gallery" style="display:none;">
-    <div class="section-title" style="margin-bottom:0.8rem;">Vidéos enchantées</div>
+    <div class="section-title" style="margin-bottom:0.8rem;">Vidéos générées</div>
     <div class="gallery-grid" id="gallery-grid"></div>
 </div>
 
+<!-- PSEUDO LPEPO (animation) -->
+<div id="lpepoPopup">Lpepo</div>
+
+<!-- SIGNATURE -->
 <div class="signature">
     <span>since @ LpepoLnK 2026</span>
 </div>
 
+<!-- STATUS BAR -->
 <div class="status-bar" id="status-bar">
     <div class="spinner"></div>
     <span id="status-text">Préparation…</span>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- ANTI-VEILLE -->
 <canvas id="noSleepCanvas" width="2" height="2"></canvas>
 <video id="noSleepVideo" playsinline muted loop></video>
+
 
 <script>
 // ══════════════════════════════════════════════════════════
@@ -758,7 +734,7 @@ select:focus { outline: none; border-color: #4a9eff; }
         return {
             segments, age: 0,
             maxLife: 3 + Math.random() * 4,
-            hue: 260 + Math.random() * 80,
+            hue: 200 + Math.random() * 60,
             pulsePhase: Math.random() * Math.PI * 2
         };
     }
@@ -826,6 +802,7 @@ select:focus { outline: none; border-color: #4a9eff; }
 (function initSmoke() {
     const canvas = document.getElementById('smokeCanvas');
     if (!canvas) return;
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
     const ctx = canvas.getContext('2d');
     let W = 0, H = 0;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -847,8 +824,7 @@ select:focus { outline: none; border-color: #4a9eff; }
     window.addEventListener('touchend', () => { mouse.active = false; });
 
     const particles = [];
-    const MAX_PARTICLES = 50;
-    let hueShift = 0;
+    const MAX_PARTICLES = 30;
 
     function spawn() {
         if (!mouse.active) return;
@@ -862,8 +838,7 @@ select:focus { outline: none; border-color: #4a9eff; }
             vy: (Math.random() - 0.5) * 0.4 - 0.1,
             life: 1,
             decay: 0.012 + Math.random() * 0.015,
-            size: 15 + Math.random() * 25,
-            hue: 260 + Math.random() * 60
+            size: 15 + Math.random() * 25
         });
     }
 
@@ -879,23 +854,57 @@ select:focus { outline: none; border-color: #4a9eff; }
             p.vx *= 0.98; p.vy *= 0.98; p.vy -= 0.0015;
             p.life -= p.decay;
             if (p.life <= 0) { particles.splice(i, 1); continue; }
-            const alpha = p.life * 0.12;
+            const alpha = p.life * 0.08;
             const r = p.size * (1.1 - p.life * 0.4);
             const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-            grad.addColorStop(0, 'hsla(' + (p.hue + hueShift) + ', 80%, 65%, ' + alpha + ')');
-            grad.addColorStop(0.5, 'hsla(' + (p.hue + hueShift) + ', 75%, 50%, ' + (alpha * 0.4) + ')');
-            grad.addColorStop(1, 'hsla(' + (p.hue + hueShift) + ', 70%, 40%, 0)');
+            grad.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
+            grad.addColorStop(0.5, 'rgba(255, 255, 255, ' + (alpha * 0.4) + ')');
+            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
             ctx.fill();
         }
-        hueShift += 0.12;
-        if (hueShift > 360) hueShift -= 360;
         ctx.globalCompositeOperation = 'source-over';
         requestAnimationFrame(tick);
     }
     tick();
+})();
+
+// ══════════════════════════════════════════════════════════
+// ANIMATION PSEUDO "Lpepo" — apparaît sur les côtés
+// ══════════════════════════════════════════════════════════
+(function initLpepoPopup() {
+    const popup = document.getElementById('lpepoPopup');
+    if (!popup) {
+        console.warn('[Lpepo] Élément #lpepoPopup introuvable');
+        return;
+    }
+
+    const positions = [
+        { x: 5,  y: 15 }, { x: 12, y: 30 }, { x: 4,  y: 50 }, { x: 10, y: 70 }, { x: 6,  y: 85 },
+        { x: 78, y: 15 }, { x: 85, y: 32 }, { x: 80, y: 52 }, { x: 88, y: 72 }, { x: 82, y: 88 },
+        { x: 15, y: 22 }, { x: 75, y: 25 }, { x: 18, y: 78 }, { x: 72, y: 82 }
+    ];
+
+    function triggerLpepo() {
+        const pos = positions[Math.floor(Math.random() * positions.length)];
+        const rotation = (Math.random() * 50 - 25).toFixed(1);
+
+        popup.style.left = pos.x + '%';
+        popup.style.top = pos.y + '%';
+        popup.style.setProperty('--rot', rotation + 'deg');
+
+        popup.classList.remove('show');
+        void popup.offsetWidth;
+        popup.classList.add('show');
+
+        const nextDelay = 30000 + Math.random() * 30000;
+        setTimeout(triggerLpepo, nextDelay);
+    }
+
+    console.log('[Lpepo] Animation prête');
+    setTimeout(triggerLpepo, 8000 + Math.random() * 5000);
 })();
 
 // ══════════════════════════════════════════════════════════
@@ -909,12 +918,51 @@ const FRAME_RATE = 24;
 let createIntervalMs = 62000;
 const CREATE_INTERVAL_MIN = 62000;
 const CREATE_INTERVAL_MAX = 90000;
-const POLL_INTERVAL_SEC = 8;
+const POLL_INTERVAL_SEC = 20;
 const MAX_POLL_ATTEMPTS = 100;
 const API_KEY_STORAGE = 'fantasy_api_key';
 const MAX_IMAGE_SIZE = 12 * 1024 * 1024;
 const THUMBNAIL_MAX_WIDTH = 200;
 
+// ══════════════════════════════════════════════════════════
+// LIMITES DE QUALITÉ (API Agnes v2.0)
+// ══════════════════════════════════════════════════════════
+const RESOLUTION_LIMITS = {
+    '480p':  { maxFrames: 961, durations: [5, 10, 15, 20, 25, 30, 35, 40] },
+    '720p':  { maxFrames: 481, durations: [5, 6, 10, 15, 20] },
+    '1080p': { maxFrames: 241, durations: [5, 6, 10] }
+};
+
+function secondsToFrames(seconds) {
+    const idealFrames = Math.round(seconds * FRAME_RATE);
+    const n = Math.round((idealFrames - 1) / 8);
+    return 8 * n + 1;
+}
+
+function renderDurationOptions(resolution) {
+    const select = document.getElementById('duration-select');
+    if (!select) return;
+    const config = RESOLUTION_LIMITS[resolution] || RESOLUTION_LIMITS['720p'];
+    const previousValue = parseInt(select.value, 10);
+
+    select.innerHTML = config.durations.map(function(sec) {
+        const frames = secondsToFrames(sec);
+        const label = sec + ' seconde' + (sec > 1 ? 's' : '');
+        const isDefault = (sec === 6 || (sec === 5 && config.durations[0] === 5 && config.durations[1] !== 6));
+        return '<option value="' + frames + '"' + (isDefault ? ' selected' : '') + '>' + label + '</option>';
+    }).join('');
+
+    if (previousValue && config.durations.some(function(s) { return secondsToFrames(s) === previousValue; })) {
+        select.value = previousValue;
+    }
+
+    state.durationFrames = parseInt(select.value, 10);
+    console.log('[Fantasy] Qualité ' + resolution + ' → durée : ' + select.options[select.selectedIndex].text);
+}
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
 const state = {
     images: [],
     isRunning: false,
@@ -925,6 +973,7 @@ const state = {
     selectedEffect: null,
     mainPrompt: '',
     format: '9:16',
+    resolution: '720p',
     framing: 'random',
     intensity: 'random',
     durationFrames: 153,
@@ -945,6 +994,9 @@ function storageRemove(k) {
     try { localStorage.removeItem(k); } catch(e){}
 }
 
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
 let toastTimeout = null;
 function showToast(msg, type, duration) {
     type = type || 'success';
@@ -961,6 +1013,9 @@ function showToast(msg, type, duration) {
     toastTimeout = setTimeout(() => toast.classList.remove('visible'), duration);
 }
 
+// ══════════════════════════════════════════════════════════
+// CLÉ API
+// ══════════════════════════════════════════════════════════
 function getApiKey() { return (storageGet(API_KEY_STORAGE) || '').trim(); }
 
 function saveApiKey() {
@@ -1022,6 +1077,9 @@ function updateGenerateBtn() {
     else btn.textContent = '✨ Créer ' + state.images.length + ' vidéo' + (state.images.length > 1 ? 's' : '');
 }
 
+// ══════════════════════════════════════════════════════════
+// EFFETS
+// ══════════════════════════════════════════════════════════
 const AMBIANCE = [
     { id: 'fairies', name: 'Fées & Poussière', emoji: '🧚', desc: 'Fées, étoiles',
       prompt: 'magical fairies dancing around the subject leaving trails of golden star dust, ethereal glowing particles, enchanted forest atmosphere. Preserve the exact subject identity.' },
@@ -1032,9 +1090,9 @@ const AMBIANCE = [
     { id: 'enchanted', name: 'Forêt Enchantée', emoji: '🌳', desc: 'Bois, brume',
       prompt: 'enchanted glowing forest at twilight, luminescent mushrooms, bioluminescent light particles. Preserve the exact subject identity.' },
     { id: 'anime', name: 'Animé', emoji: '🌸', desc: 'Style japonais vibrant',
-      prompt: 'vibrant Japanese anime aesthetic, cel-shaded characters, expressive eyes, dynamic lighting, soft pastel color palette, subtle animation with gentle hair movement and glowing particles, atmosphere of an anime opening scene. Preserve the exact subject identity while giving the scene a beautiful animated look.' },
+      prompt: 'vibrant Japanese anime aesthetic, cel-shaded characters, expressive eyes, dynamic lighting, soft pastel color palette, subtle animation with gentle hair movement and glowing particles, atmosphere of an anime opening scene. Preserve the exact subject identity.' },
     { id: 'cartoon', name: 'Cartoon', emoji: '🎨', desc: 'Style dessin animé joyeux',
-      prompt: 'playful cartoon animation style, bold outlines, bright saturated colors, exaggerated expressions, lively energetic movement, bouncy animation feel like a modern animated feature. Preserve the exact subject identity while giving the scene a fun cartoon look.' },
+      prompt: 'playful cartoon animation style, bold outlines, bright saturated colors, exaggerated expressions, lively energetic movement, bouncy animation feel. Preserve the exact subject identity.' },
     { id: 'celestial', name: 'Céleste', emoji: '✨', desc: 'Aurore, étoiles',
       prompt: 'celestial magical atmosphere, aurora borealis colors, floating constellations, star-filled sky. Preserve the exact subject identity.' },
     { id: 'crystal', name: 'Cristal', emoji: '💎', desc: 'Cristaux, lueur',
@@ -1072,13 +1130,12 @@ const STYLIZE = [
 
 const PRESETS = [
     { label: '🧚 Fées', text: 'Des fées dansent autour du sujet dans une traînée de poussière d\'étoile dorée. Lumière irréelle et dorée.' },
-    { label: '🐉 Dragon', text: 'Un dragon traverse le ciel violet en laissant une traînée de braises.' },
+    { label: '🐉 Dragon', text: 'Un dragon traverse le ciel en laissant une traînée de braises.' },
     { label: '🌳 Enchanté', text: 'Forêt enchantée illuminée par des champignons lumineux et des lucioles.' },
     { label: '🌸 Animé', text: 'Donne à cette image un style animé japonais vibrant avec des couleurs pastel, des yeux expressifs et un léger mouvement de cheveux dans la brise.' },
     { label: '🎨 Cartoon', text: 'Transforme cette scène en dessin animé joyeux avec des contours marqués, des couleurs vives et un mouvement énergique.' },
     { label: '🔮 Magie Pure', text: 'Des runes magiques flottent autour du sujet dans une lueur bleue et violette.' }
 ];
-
 
 const RANDOM_ACTIONS = [
     'the subject slowly raises a hand toward the sky',
@@ -1110,6 +1167,9 @@ const FRAMING = {
     wide: 'wide shot with environment visible'
 };
 
+// ══════════════════════════════════════════════════════════
+// UTILITAIRES
+// ══════════════════════════════════════════════════════════
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function log(m) { console.log('[Fantasy]', m); }
 function randomItem(a) { return a[Math.floor(Math.random() * a.length)]; }
@@ -1126,6 +1186,9 @@ function setStatus(t) {
     else bar.classList.remove('visible');
 }
 
+// ══════════════════════════════════════════════════════════
+// IMAGES
+// ══════════════════════════════════════════════════════════
 function fileToDataUri(file) {
     return new Promise(function(resolve, reject) {
         const r = new FileReader();
@@ -1199,6 +1262,9 @@ function renderImages() {
     });
 }
 
+// ══════════════════════════════════════════════════════════
+// RENDU PRESETS & STYLES
+// ══════════════════════════════════════════════════════════
 function renderPromptPresets() {
     const c = document.getElementById('prompt-presets');
     if (!c) return;
@@ -1248,47 +1314,123 @@ function renderStyles() {
     });
 }
 
+// ══════════════════════════════════════════════════════════
+// PROMPT
+// ══════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════
+// PRÉ-RECADRAGE DE L'IMAGE (au ratio demandé)
+// ══════════════════════════════════════════════════════════
+function preCropImage(dataUri, targetAspect) {
+    return new Promise(function(resolve) {
+        const img = new Image();
+        img.onload = function() {
+            try {
+                const parts = targetAspect.split(':');
+                const targetRatio = parseInt(parts[0]) / parseInt(parts[1]);
+                
+                const imgRatio = img.width / img.height;
+                let sx = 0, sy = 0, sw = img.width, sh = img.height;
+                
+                if (imgRatio > targetRatio) {
+                    sw = img.height * targetRatio;
+                    sx = (img.width - sw) / 2;
+                } else if (imgRatio < targetRatio) {
+                    sh = img.width / targetRatio;
+                    sy = (img.height - sh) / 2;
+                }
+                
+                const canvas = document.createElement('canvas');
+                const targetW = targetRatio < 1 ? 720 : 1280;
+                const targetH = targetRatio < 1 ? 1280 : 720;
+                canvas.width = targetW;
+                canvas.height = targetH;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+                
+                const cropped = canvas.toDataURL('image/jpeg', 0.9);
+                console.log('[Fantasy] Image pré-recadrée :', img.width + 'x' + img.height, '→', targetW + 'x' + targetH);
+                resolve(cropped);
+            } catch (e) {
+                console.warn('[Fantasy] Erreur recadrage, image originale utilisée:', e.message);
+                resolve(dataUri);
+            }
+        };
+        img.onerror = function() { resolve(dataUri); };
+        img.src = dataUri;
+    });
+}
+
 function buildPrompt() {
     const all = AMBIANCE.concat(STYLIZE);
     const eff = state.selectedEffect ? all.find(function(s) { return s.id === state.selectedEffect; }) : null;
     const isStylize = eff && STYLIZE.some(function(s) { return s.id === state.selectedEffect; });
     const hasUser = state.mainPrompt && state.mainPrompt.trim().length > 0;
     const parts = [];
+
     if (isStylize) {
-        parts.push('Animate this image as the starting frame. Transform the entire image into the following artistic style:');
+        parts.push('Animate this image as the starting frame. Apply the following style transformation while keeping photographic realism:');
     } else {
-        parts.push('Animate this exact image as the starting frame. The subject must remain IDENTICAL: same face, same pose. Preserve composition and framing.');
+        parts.push(
+            'Photorealistic animation of this exact photograph. ' +
+            'The subject must remain IDENTICAL to the source image: same face, same features, same skin texture, same clothing, same pose, same identity, same composition, same framing, same lighting. ' +
+            'This is a living photograph, not a re-creation.'
+        );
     }
+
+       parts.push(
+        'Natural realistic rendering, true-to-life skin and textures, ' +
+        'real-world lighting and shadows, believable physics, ' +
+        'subtle natural movement, minimal but lifelike animation. ' +
+        'IMPORTANT: The video MUST start with the EXACT framing of the source image. ' +
+        'No zoom-in, no crop, no reframe at the beginning. ' +
+        'The camera stays static at the source framing. ' +
+        'Do NOT cut off the top of the subject\'s head. ' +
+        'Preserve the entire original composition from frame 1 to the last frame.'
+    );
+
+       parts.push(
+        'No cartoon, no anime, no painting, no illustration, no 3D render, no CGI look, ' +
+        'no plastic skin, no distortions, no warped anatomy, no extra limbs or fingers, ' +
+        'no text, no watermarks, no AI artifacts, no over-smoothing, no artificial filters. ' +
+        'No initial zoom, no opening push-in, no framing change at start, no head cropping.'
+    );
+
     if (eff) parts.push(eff.prompt);
-    if (hasUser) parts.push('Artistic direction: ' + state.mainPrompt.trim());
+    if (hasUser) parts.push('Additional direction: ' + state.mainPrompt.trim());
     if (state.framing !== 'random' && FRAMING[state.framing]) parts.push(FRAMING[state.framing]);
     if (state.intensity !== 'random' && INTENSITY[state.intensity]) parts.push(INTENSITY[state.intensity]);
-    else parts.push('moderate movement, clear but controlled');
+    else parts.push('very subtle natural movement');
+
     parts.push(randomItem(RANDOM_ACTIONS));
-    parts.push(randomItem(RANDOM_CAMERA));
-    parts.push(randomItem(RANDOM_LIGHT));
+
     if (state.format === '16:9') {
-        parts.push('Landscape 16:9 horizontal widescreen format, 60fps, no text, no watermarks');
+        parts.push('Landscape 16:9, no text, no watermarks');
     } else {
-        parts.push('Portrait 9:16 vertical format, 60fps, no text, no watermarks');
+        parts.push('Portrait 9:16, no text, no watermarks');
     }
+
     return parts.join('. ');
 }
 
+// ══════════════════════════════════════════════════════════
+// API AGNES v2.0
+// ══════════════════════════════════════════════════════════
 async function apiFetch(url, options, label) {
     for (let attempt = 0; attempt < 7; attempt++) {
         if (state.stopRequested) throw new Error('Arrêt demandé');
         try {
             const res = await fetch(url, options);
             if (res.status === 429) {
-                const w = [15, 30, 45, 60, 90, 120, 180][Math.min(attempt, 6)];
-                setStatus('L\'IA se prépare… (' + w + 's)');
+                const w = [30, 60, 90, 120, 180, 300, 600][Math.min(attempt, 6)];
+                setStatus('Limite atteinte, attente… (' + w + 's)');
                 await sleep(w * 1000);
                 continue;
             }
             if (res.status === 503) {
-                const w = [5, 10, 15, 20, 30, 45][Math.min(attempt, 5)];
-                setStatus('Vidéo en préparation… (' + w + 's)');
+                const w = [30, 60, 120, 180, 300, 600][Math.min(attempt, 5)];
+                setStatus('Serveur saturé, nouvelle tentative… (' + w + 's)');
                 await sleep(w * 1000);
                 continue;
             }
@@ -1304,12 +1446,15 @@ async function apiFetch(url, options, label) {
 }
 
 async function createVideoTask(imageDataUri, prompt) {
-    // 🔒 Sécurité : garantit que num_frames respecte la règle 8*n+1 de l'API Agnes
     const n = Math.round((state.durationFrames - 1) / 8);
     const safeFrames = 8 * n + 1;
-    if (safeFrames !== state.durationFrames) {
-        console.warn('[Fantasy] num_frames corrigé :', state.durationFrames, '→', safeFrames);
-        state.durationFrames = safeFrames;
+
+    const limit = RESOLUTION_LIMITS[state.resolution] ? RESOLUTION_LIMITS[state.resolution].maxFrames : 481;
+    const finalFrames = Math.min(safeFrames, limit);
+
+    if (finalFrames !== state.durationFrames) {
+        console.warn('[Fantasy] num_frames ajusté :', state.durationFrames, '→', finalFrames, '(' + state.resolution + ')');
+        state.durationFrames = finalFrames;
     }
 
     const res = await apiFetch(API_BASE + '/videos', {
@@ -1322,7 +1467,7 @@ async function createVideoTask(imageDataUri, prompt) {
             model: MODEL_VIDEO,
             prompt: prompt,
             image: imageDataUri,
-            num_frames: state.durationFrames,
+            num_frames: finalFrames,
             frame_rate: FRAME_RATE
         })
     }, 'Création');
@@ -1374,6 +1519,9 @@ async function pollVideo(videoId, onProgress) {
     throw new Error('Délai dépassé');
 }
 
+// ══════════════════════════════════════════════════════════
+// FILE D'ATTENTE & GALERIE
+// ══════════════════════════════════════════════════════════
 function renderQueue() {
     const q = document.getElementById('queue');
     if (!q) return;
@@ -1408,12 +1556,19 @@ function addToGallery(url, label) {
     grid.appendChild(el);
 }
 
+// ══════════════════════════════════════════════════════════
+// PIPELINE
+// ══════════════════════════════════════════════════════════
 async function createTaskOnly(item) {
     item.status = 'creating';
     item.progress = 'Préparation…';
     renderQueue();
+    
+    // 🎯 Pré-recadrage au bon ratio avant envoi à l'API
+    const croppedImage = await preCropImage(item.image.dataUri, state.format);
+    
     const prompt = buildPrompt();
-    const videoId = await createVideoTask(item.image.dataUri, prompt);
+    const videoId = await createVideoTask(croppedImage, prompt);
     item.videoId = videoId;
     item.startTime = Date.now();
     item.status = 'processing';
@@ -1524,6 +1679,9 @@ function stopGeneration() {
     setStatus('Arrêt en cours…');
 }
 
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
 (function init() {
     console.log('[Fantasy] Init…');
 
@@ -1563,8 +1721,18 @@ function stopGeneration() {
 
     const fmt = document.getElementById('format-select');
     if (fmt) fmt.addEventListener('change', function(e) { state.format = e.target.value; });
+
+    const resSelect = document.getElementById('resolution-select');
+    if (resSelect) {
+        resSelect.addEventListener('change', function(e) {
+            state.resolution = e.target.value;
+            renderDurationOptions(state.resolution);
+        });
+    }
+
     const dur = document.getElementById('duration-select');
     if (dur) dur.addEventListener('change', function(e) { state.durationFrames = parseInt(e.target.value, 10); });
+
     const fr = document.getElementById('framing-select');
     if (fr) fr.addEventListener('change', function(e) { state.framing = e.target.value; });
     const it = document.getElementById('intensity-select');
@@ -1579,65 +1747,31 @@ function stopGeneration() {
     renderImages();
     renderQueue();
 
-// ══════════════════════════════════════════════════════════
-// Animation pseudo "Lpepo" — apparaît sur les côtés aléatoirement
-// ══════════════════════════════════════════════════════════
-(function initLpepoPopup() {
-    const popup = document.getElementById('lpepoPopup');
-    if (!popup) return;
+    // MODE LÉGER
+    const lightModeBtn = document.getElementById('light-mode-btn');
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const savedLightMode = localStorage.getItem('fantasy_light_mode');
 
-    // Zones d'apparition sur les côtés (en % de la fenêtre)
-    // Chaque zone = { x, y } où x et y sont des pourcentages
-    const positions = [
-        // Côté gauche
-        { x: 8,  y: 15 },
-        { x: 12, y: 30 },
-        { x: 7,  y: 50 },
-        { x: 10, y: 70 },
-        { x: 6,  y: 88 },
-        // Côté droit
-        { x: 92, y: 15 },
-        { x: 88, y: 32 },
-        { x: 93, y: 52 },
-        { x: 90, y: 72 },
-        { x: 94, y: 88 },
-        // Un peu plus vers l'intérieur (mais toujours sur les côtés)
-        { x: 18, y: 22 },
-        { x: 82, y: 25 },
-        { x: 20, y: 78 },
-        { x: 80, y: 82 }
-    ];
-
-    function triggerLpepo() {
-        // Choisir une position aléatoire
-        const pos = positions[Math.floor(Math.random() * positions.length)];
-
-        // Rotation aléatoire (de -25° à +25°)
-        const rotation = (Math.random() * 50 - 25).toFixed(1);
-
-        // Appliquer position + rotation via variables CSS
-        popup.style.left = pos.x + '%';
-        popup.style.top = pos.y + '%';
-        popup.style.setProperty('--rot', rotation + 'deg');
-
-        // Relancer l'animation
-        popup.classList.remove('show');
-        void popup.offsetWidth;
-        popup.classList.add('show');
-
-        // Prochain déclenchement dans 6 à 15 secondes
-        const nextDelay = 6000 + Math.random() * 9000;
-        setTimeout(triggerLpepo, nextDelay);
+    if (savedLightMode === '1' || (savedLightMode === null && isMobileDevice)) {
+        document.body.classList.add('light-mode');
+        if (lightModeBtn) lightModeBtn.textContent = '✨ Désactiver le mode léger';
     }
 
-    // Premier déclenchement après 2 à 5 secondes
-    setTimeout(triggerLpepo, 2000 + Math.random() * 3000);
-})();
+    if (lightModeBtn) {
+        lightModeBtn.addEventListener('click', function() {
+            const isActive = document.body.classList.toggle('light-mode');
+            lightModeBtn.textContent = isActive ? '✨ Désactiver le mode léger' : '⚡ Activer le mode léger';
+            localStorage.setItem('fantasy_light_mode', isActive ? '1' : '0');
+            showToast(isActive ? 'Mode léger activé' : 'Mode complet activé', 'success', 1500);
+        });
+    }
 
+    // Initialise le menu des durées selon la qualité par défaut
+    renderDurationOptions(state.resolution);
 
     console.log('[Fantasy] Prêt.');
 })();
 </script>
-<div id="lpepoPopup">Lpepo</div>
+
 </body>
 </html>
