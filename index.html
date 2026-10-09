@@ -1,1777 +1,730 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La magie d'Lpepo — Atelier Vidéo</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; min-height: 100%; overflow-x: hidden; }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    background: #030810;
-    color: #e8f0ff;
-    min-height: 100vh; padding: 1.5rem 1rem 6rem; font-size: 15px; line-height: 1.5;
-    max-width: 900px; margin: 0 auto;
-    position: relative;
-    isolation: isolate;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LnoaX_GTR_ · moto cross & passions</title>
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+      cursor: none;
+    }
 
-/* ═══ FOND 3D ═══ */
-#bg3d {
-    position: fixed; inset: 0; z-index: -3; overflow: hidden;
-    perspective: 800px; perspective-origin: 50% 40%;
-    background: radial-gradient(ellipse at 50% 20%, #0f1a2e 0%, #06101a 45%, #030810 100%);
-}
-#bg3d .grid {
-    position: absolute; left: -50%; top: -10%; width: 200%; height: 200%;
-    background-image:
-        linear-gradient(rgba(74,158,255,0.4) 2px, transparent 2px),
-        linear-gradient(90deg, rgba(94,184,255,0.3) 2px, transparent 2px);
-    background-size: 90px 90px, 90px 90px;
-    transform: rotateX(62deg) translateZ(-120px);
-    transform-origin: 50% 50%;
-    animation: gridMove 22s linear infinite;
-    filter: drop-shadow(0 0 8px rgba(74,158,255,0.4));
-    mask-image: radial-gradient(ellipse at 50% 50%, #000 30%, transparent 78%);
-    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 30%, transparent 78%);
-}
-#bg3d .grid::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-        radial-gradient(circle at 30% 30%, rgba(255,217,102,0.12), transparent 40%),
-        radial-gradient(circle at 70% 70%, rgba(74,158,255,0.15), transparent 40%);
-    animation: gridGlow 16s ease-in-out infinite alternate;
-    pointer-events: none;
-}
-@keyframes gridMove {
-    0%   { transform: rotateX(62deg) translateZ(-120px) translateY(0); }
-    100% { transform: rotateX(62deg) translateZ(-120px) translateY(90px); }
-}
-@keyframes gridGlow { 0% { opacity: 0.5; } 100% { opacity: 0.9; } }
+    body {
+      background: #0b1a0f;
+      color: #e0f0d0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      padding-bottom: 70px;
+      background-image: radial-gradient(circle at 20% 30%, #2a4a1e 0%, #0a1307 90%);
+    }
 
-#bg3d .halo { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; mix-blend-mode: screen; }
-#bg3d .halo.h1 { width: 400px; height: 400px; top: -100px; left: 10%;
-    background: radial-gradient(circle, rgba(74,158,255,0.5), transparent 70%);
-    animation: haloFloat1 18s ease-in-out infinite; }
-#bg3d .halo.h2 { width: 500px; height: 500px; bottom: -150px; right: 5%;
-    background: radial-gradient(circle, rgba(94,184,255,0.4), transparent 70%);
-    animation: haloFloat2 22s ease-in-out infinite; }
-#bg3d .halo.h3 { width: 300px; height: 300px; top: 40%; left: 45%;
-    background: radial-gradient(circle, rgba(200,220,255,0.3), transparent 70%);
-    animation: haloFloat3 26s ease-in-out infinite; }
-@keyframes haloFloat1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(80px, 60px) scale(1.15); } }
-@keyframes haloFloat2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-70px, -50px) scale(1.2); } }
-@keyframes haloFloat3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px, 40px) scale(1.1); } }
+    /* ---------- CURSEUR PERSONNALISÉ + POUSSIÈRE ---------- */
+    .cursor {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle, #d4ffb0 0%, #7bb33b 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 20px #b5ff6b, 0 0 40px #4a7a1e;
+      transition: width 0.1s, height 0.1s;
+      mix-blend-mode: screen;
+      border: 1px solid rgba(255, 255, 200, 0.6);
+    }
 
-/* ═══ CANVAS ═══ */
-#circuitCanvas { position: fixed; inset: 0; z-index: -2; pointer-events: none; mix-blend-mode: screen; opacity: 0.7; }
-#smokeCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; mix-blend-mode: screen; opacity: 0.55; }
+    .dust {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, rgba(210, 180, 140, 0.45) 0%, rgba(160, 120, 70, 0) 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(8px);
+      opacity: 0.7;
+      transition: all 0.15s ease-out;
+      mix-blend-mode: screen;
+    }
 
-/* ═══ ANIMATIONS LATÉRALES ═══ */
-#sideEffects {
-    position: fixed; inset: 0; z-index: -2;
-    pointer-events: none; overflow: hidden;
-}
-#sideEffects .beam {
-    position: absolute; top: -20%;
-    width: 2px; height: 140%;
-    background: linear-gradient(to bottom,
-        transparent 0%,
-        rgba(74,158,255,0.6) 20%,
-        rgba(94,184,255,0.9) 50%,
-        rgba(74,158,255,0.6) 80%,
-        transparent 100%);
-    filter: blur(1px);
-    animation: beamFlow 8s ease-in-out infinite;
-    opacity: 0.4;
-}
-#sideEffects .beam.b1 { left: 4%; animation-delay: 0s; }
-#sideEffects .beam.b2 { right: 4%; animation-delay: 1.5s; }
-#sideEffects .beam.b3 { left: 9%; animation-delay: 3s; height: 100%; opacity: 0.25; }
-#sideEffects .beam.b4 { right: 9%; animation-delay: 4.5s; height: 100%; opacity: 0.25; }
-@keyframes beamFlow {
-    0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.3; }
-    50%      { transform: translateY(-10%) scaleY(1.1); opacity: 0.7; }
-}
+    /* ---------- ANIMATIONS DE FOND ---------- */
+    .bg-anim {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
 
-#sideEffects .spark {
-    position: absolute; width: 4px; height: 4px; border-radius: 50%;
-    background: #5eb8ff;
-    box-shadow: 0 0 10px #4a9eff, 0 0 20px #4a9eff;
-    animation: sparkFloat 6s ease-in-out infinite;
-}
-#sideEffects .spark.s1 { left: 3%;  top: 20%; animation-delay: 0s; }
-#sideEffects .spark.s2 { left: 6%;  top: 60%; animation-delay: 1s; background: #a8d8ff; }
-#sideEffects .spark.s3 { right: 5%; top: 30%; animation-delay: 2s; }
-#sideEffects .spark.s4 { right: 8%; top: 75%; animation-delay: 3s; background: #a8d8ff; }
-#sideEffects .spark.s5 { left: 2%;  top: 85%; animation-delay: 4s; }
-#sideEffects .spark.s6 { right: 2%; top: 15%; animation-delay: 5s; background: #ffd966; }
-@keyframes sparkFloat {
-    0%, 100% { transform: translateY(0); opacity: 0.3; }
-    50%      { transform: translateY(-40px); opacity: 1; }
-}
+    .halo {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.3;
+      animation: floatHalo 12s infinite alternate ease-in-out;
+    }
 
-#sideEffects .shape {
-    position: absolute; width: 60px; height: 60px;
-    border: 1px solid rgba(74,158,255,0.3);
-    transform: rotate(45deg);
-    animation: shapeRotate 12s linear infinite;
-    opacity: 0.25;
-}
-#sideEffects .shape.sh1 { left: 1%;  top: 25%; }
-#sideEffects .shape.sh2 { right: 1%; top: 55%; animation-direction: reverse; }
-#sideEffects .shape.sh3 { left: 2%;  top: 70%; animation-duration: 18s; }
-@keyframes shapeRotate {
-    0%   { transform: rotate(45deg) scale(1); opacity: 0.15; }
-    50%  { transform: rotate(225deg) scale(1.15); opacity: 0.35; }
-    100% { transform: rotate(405deg) scale(1); opacity: 0.15; }
-}
+    .halo1 {
+      width: 500px;
+      height: 500px;
+      background: #9acd32;
+      top: -150px;
+      left: -150px;
+      animation-duration: 18s;
+    }
 
-/* ═══ ÉCLAIRS SUR LES CÔTÉS ═══ */
-#sideEffects .spark-bolt {
-    position: absolute; width: 40px; height: 70px;
-    pointer-events: none; opacity: 0;
-    filter: drop-shadow(0 0 6px rgba(74,158,255,0.9)) drop-shadow(0 0 14px rgba(94,184,255,0.5));
-    animation: boltFlash 5s ease-in-out infinite;
-}
-#sideEffects .spark-bolt.sb1 { left: 2%;  top: 10%; animation-delay: 0s; }
-#sideEffects .spark-bolt.sb2 { left: 6%;  top: 40%; animation-delay: 1.8s; transform: scale(0.8) rotate(15deg); }
-#sideEffects .spark-bolt.sb3 { left: 3%;  top: 72%; animation-delay: 3.6s; transform: scale(1.2) rotate(-10deg); }
-#sideEffects .spark-bolt.sb4 { right: 2%; top: 18%; animation-delay: 0.9s; transform: scale(0.9) rotate(-15deg); }
-#sideEffects .spark-bolt.sb5 { right: 6%; top: 48%; animation-delay: 2.7s; transform: scale(1.1) rotate(12deg); }
-#sideEffects .spark-bolt.sb6 { right: 3%; top: 82%; animation-delay: 4.4s; transform: scale(0.85) rotate(-8deg); }
-#sideEffects .spark-bolt::before {
-    content: ''; position: absolute; inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%234a9eff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='0.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-    background-size: contain; background-repeat: no-repeat; background-position: center;
-}
-#sideEffects .spark-bolt::after {
-    content: ''; position: absolute; inset: -4px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 70'><path d='M20 0 L12 28 L22 30 L8 70' stroke='%23a8d8ff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'/></svg>");
-    background-size: contain; background-repeat: no-repeat; background-position: center;
-    filter: blur(3px);
-    animation: boltGlow 5s ease-in-out infinite;
-}
-@keyframes boltFlash {
-    0%, 88%, 100% { opacity: 0; }
-    89%           { opacity: 0.9; }
-    90%           { opacity: 0.2; }
-    91%           { opacity: 1; }
-    93%           { opacity: 0.6; }
-    95%           { opacity: 0.9; }
-    97%           { opacity: 0; }
-}
-@keyframes boltGlow {
-    0%, 88%, 100% { opacity: 0; }
-    89%, 97%      { opacity: 1; }
-}
+    .halo2 {
+      width: 600px;
+      height: 600px;
+      background: #ffaa33;
+      bottom: -200px;
+      right: -100px;
+      animation-duration: 22s;
+      animation-delay: -3s;
+      opacity: 0.2;
+    }
 
-/* ═══ PSEUDO LPEPO ═══ */
-#lpepoPopup {
-    position: fixed; top: 50%; left: 50%;
-    font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'Anton', sans-serif;
-    font-size: clamp(2rem, 7vw, 4.5rem);
-    font-weight: 900;
-    font-style: normal;
-    letter-spacing: 0.08em;
-    color: #4a9eff;
-    text-shadow:
-        2px 2px 0 #1a4a8a,
-        4px 4px 0 #0d2a55,
-        6px 6px 0 #06152b,
-        8px 8px 20px rgba(0,0,0,0.9),
-        0 0 30px rgba(74,158,255,0.8),
-        0 0 60px rgba(94,184,255,0.5);
-    z-index: 9999;
-    pointer-events: none; opacity: 0;
-    white-space: nowrap; user-select: none;
-    will-change: opacity, transform;
-    transform-origin: center center;
-}
-#lpepoPopup.show { animation: lpepoFlash 4s ease-in-out forwards; }
-@keyframes lpepoFlash {
-    0%   { opacity: 0;    transform: rotate(var(--rot, -12deg)) scale(0.85); }
-    35%  { opacity: 0.45; transform: rotate(var(--rot, -12deg)) scale(1); }
-    60%  { opacity: 0.45; transform: rotate(var(--rot, -12deg)) scale(1); }
-    100% { opacity: 0;    transform: rotate(var(--rot, -12deg)) scale(1.15); }
-}
-/* ═══ HEADER ═══ */
-header { margin-bottom: 1.5rem; text-align: center; position: relative; z-index: 1; }
-h1 {
-    font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem;
-    background: linear-gradient(90deg, #4a9eff, #a8d8ff, #00e5ff, #4a9eff);
-    background-size: 200% 200%;
-    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    animation: titleShine 6s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(74,158,255,0.6)) drop-shadow(0 0 40px rgba(0,229,255,0.3));
-    letter-spacing: 0.02em;
-    text-align: center;
-    line-height: 1.3;
-}
-@keyframes titleShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-.subtitle { font-size: 0.85rem; color: #8fa8c8; font-style: italic; }
+    .halo3 {
+      width: 400px;
+      height: 400px;
+      background: #3cb371;
+      top: 40%;
+      left: 60%;
+      animation-duration: 15s;
+      animation-delay: -7s;
+      opacity: 0.25;
+    }
 
-/* ═══ PANNEAUX ═══ */
-.info-banner, .panel, .section, .upload-zone, .queue-item, .gallery-item {
-    position: relative; z-index: 1;
-    transform-style: preserve-3d;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.info-banner {
-    background: linear-gradient(135deg, rgba(74,158,255,0.18), rgba(94,184,255,0.12));
-    border: 1px solid rgba(74,158,255,0.35);
-    border-left: 3px solid #4a9eff;
-    padding: 0.85rem 1rem; border-radius: 12px;
-    font-size: 0.8rem; margin-bottom: 1rem; line-height: 1.5;
-    box-shadow: 0 4px 20px rgba(74,158,255,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
-    backdrop-filter: blur(10px);
-}
-.info-banner strong { color: #ffd966; }
+    .lines {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(180, 255, 100, 0.03) 40px, rgba(180, 255, 100, 0.03) 42px);
+      animation: shiftLines 20s linear infinite;
+    }
 
-.panel {
-    background: linear-gradient(145deg, rgba(20,32,55,0.85), rgba(12,20,40,0.9));
-    border: 1px solid rgba(74,158,255,0.25);
-    border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1rem;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-    backdrop-filter: blur(12px);
-}
-.panel.ok { border-color: rgba(74,222,128,0.6); }
+    @keyframes shiftLines {
+      0% { background-position: 0 0; }
+      100% { background-position: 200px 200px; }
+    }
 
-.api-key-input {
-    width: 100%; padding: 0.85rem 1rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
-    color: #e8f0ff; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.6rem;
-}
-.api-key-input:focus { outline: none; border-color: #4a9eff; }
+    @keyframes floatHalo {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, -40px) scale(1.2); }
+    }
 
-.api-save-btn {
-    width: 100%; padding: 0.9rem; border-radius: 10px; border: none;
-    background: linear-gradient(135deg, #4a9eff, #5eb8ff);
-    color: #fff; font-size: 0.95rem; font-weight: 600;
-    cursor: pointer; margin-bottom: 0.6rem;
-}
-.api-save-btn:active { transform: translateY(1px); }
+    .flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 40%, rgba(255, 255, 200, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      animation: flashPulse 6s infinite alternate;
+    }
 
-.status-line {
-    font-size: 0.78rem; padding: 0.6rem 0.85rem; border-radius: 8px; margin-bottom: 0.5rem;
-    background: rgba(6,16,26,0.6); color: #8fa8c8;
-    display: flex; align-items: center; gap: 0.5rem;
-}
-.status-line.ok { background: rgba(74,222,128,0.15); color: #4ade80; font-weight: 600; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #5a6a8a; flex-shrink: 0; }
-.status-line.ok .status-dot { background: #4ade80; }
+    @keyframes flashPulse {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.6; }
+    }
 
-.hint { font-size: 0.72rem; color: #8fa8c8; margin-top: 0.4rem; }
-.hint a { color: #4a9eff; }
+    /* ---------- CONTENU ---------- */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
 
-.upload-zone {
-    border: 2px dashed rgba(74,158,255,0.35); border-radius: 14px;
-    padding: 2rem 1rem; text-align: center; cursor: pointer;
-    margin-bottom: 1rem;
-    background: linear-gradient(145deg, rgba(20,32,55,0.7), rgba(12,20,40,0.85));
-    transition: all 0.25s;
-}
-.upload-zone:hover, .upload-zone:active {
-    border-color: #4a9eff; transform: translateY(-2px);
-}
-.upload-zone input { display: none; }
-.upload-icon { font-size: 2.4rem; margin-bottom: 0.6rem; color: #4a9eff; }
-.upload-text { font-size: 1rem; margin-bottom: 0.3rem; }
-.upload-hint { font-size: 0.75rem; color: #8fa8c8; }
+    .main-title {
+      font-size: clamp(2.8rem, 10vw, 6rem);
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-align: center;
+      text-shadow: 0 0 30px #b3ff66, 0 0 60px #3a6b1a, 0 0 100px #1e3a0e;
+      color: #f0ffe0;
+      position: relative;
+      display: inline-block;
+      margin: 0 auto;
+      padding: 0 0.5rem;
+      border-bottom: 6px solid #b3ff66;
+      border-image: linear-gradient(to right, transparent, #b3ff66, #ffb347, #b3ff66, transparent) 1;
+    }
 
-.images-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 0.5rem; margin-bottom: 1rem; position: relative; z-index: 1;
-}
-.image-card {
-    position: relative; border-radius: 10px; overflow: hidden;
-    border: 1px solid rgba(74,158,255,0.25); background: #1a2540; aspect-ratio: 9/16;
-}
-.image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.image-card .remove-btn {
-    position: absolute; top: 4px; right: 4px;
-    background: rgba(0,0,0,0.75); color: #fff; border: none;
-    width: 22px; height: 22px; border-radius: 50%; font-size: 11px;
-    cursor: pointer; line-height: 1;
-}
+    .title-cursor {
+      display: inline-block;
+      width: 12px;
+      height: 1.1em;
+      background: #b3ff66;
+      margin-left: 12px;
+      vertical-align: middle;
+      animation: blinkCursor 1s step-end infinite;
+      box-shadow: 0 0 20px #b3ff66, 0 0 40px #b3ff66;
+      border-radius: 2px;
+    }
 
-.section {
-    background: linear-gradient(145deg, rgba(20,32,55,0.85), rgba(12,20,40,0.9));
-    border: 1px solid rgba(74,158,255,0.25);
-    border-radius: 14px; margin-bottom: 1rem; overflow: hidden;
-}
-.section-header {
-    padding: 0.9rem 1.1rem; cursor: pointer;
-    display: flex; justify-content: space-between; align-items: center;
-}
-.section-header:hover { background: rgba(74,158,255,0.06); }
-.section-title {
-    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
-    color: #8fa8c8; font-weight: 600;
-}
-.chevron { font-size: 0.7rem; color: #5a6a8a; transition: transform 0.2s; }
-.section.open .chevron { transform: rotate(180deg); }
-.section-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-.section.open .section-body { max-height: 3000px; }
-.section-content { padding: 0 1.1rem 1.1rem; }
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
 
-.prompt-main {
-    width: 100%; padding: 0.85rem 1rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
-    color: #e8f0ff; font-family: inherit; font-size: 0.9rem;
-    min-height: 110px; resize: vertical; line-height: 1.5;
-}
-.prompt-main:focus { outline: none; border-color: #4a9eff; }
+    /* onglets */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin: 1rem 0 1.5rem;
+    }
 
-.prompt-presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
-.prompt-preset {
-    padding: 0.4rem 0.8rem; border-radius: 16px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(26,37,64,0.7);
-    font-size: 0.72rem; cursor: pointer; color: #8fa8c8;
-}
-.prompt-preset:hover { border-color: #4a9eff; color: #e8f0ff; }
+    .tab {
+      background: rgba(20, 40, 10, 0.7);
+      backdrop-filter: blur(8px);
+      border: 2px solid #6a994e;
+      border-radius: 60px;
+      padding: 0.9rem 2rem;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #e0f0d0;
+      transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 0 15px rgba(180, 255, 100, 0.3);
+      text-shadow: 0 0 8px #000;
+      letter-spacing: 1px;
+      cursor: none;
+      flex: 0 1 auto;
+    }
 
-.styles-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.5rem;
-}
-.style-card {
-    padding: 0.75rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(26,37,64,0.7);
-    cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
-}
-.style-card.selected {
-    background: linear-gradient(135deg, #4a9eff, #5eb8ff);
-    color: #fff; border-color: transparent;
-}
-.style-emoji { font-size: 1.2rem; }
-.style-name { font-size: 0.8rem; font-weight: 500; }
-.style-desc { font-size: 0.65rem; opacity: 0.75; margin-top: 0.1rem; }
+    .tab:hover {
+      background: #b3ff66;
+      color: #0a1307;
+      border-color: #f0ffe0;
+      transform: scale(1.1) translateY(-5px) rotate(-1deg);
+      box-shadow: 0 0 40px #b3ff66, 0 0 70px #6a994e;
+      text-shadow: none;
+    }
 
-.cat-header {
-    grid-column: 1 / -1; font-size: 0.7rem; font-weight: 600;
-    color: #ffd966; text-transform: uppercase; letter-spacing: 0.08em;
-    padding: 0.6rem 0 0.3rem; border-bottom: 1px solid rgba(74,158,255,0.2); margin-bottom: 0.3rem;
-}
-.cat-header:first-child { padding-top: 0; border-bottom: none; }
-.cat-desc { grid-column: 1 / -1; font-size: 0.68rem; color: #8fa8c8; font-style: italic; margin-bottom: 0.4rem; }
+    /* grille des passions */
+    .passions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+      margin-top: 1rem;
+    }
 
-.no-style {
-    grid-column: 1 / -1; padding: 0.8rem; border-radius: 10px;
-    border: 2px dashed rgba(74,158,255,0.3); background: transparent;
-    text-align: center; cursor: pointer; font-size: 0.82rem; color: #8fa8c8;
-}
-.no-style.selected { border-color: #4a9eff; border-style: solid; background: rgba(74,158,255,0.12); color: #e8f0ff; font-weight: 600; }
+    .passion-card {
+      background: rgba(12, 25, 8, 0.8);
+      backdrop-filter: blur(10px);
+      border: 2px solid #4a7a1e;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(180, 255, 100, 0.3);
+      transition: all 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: none;
+      animation: cardGlow 3s infinite alternate;
+    }
 
-.control-row { margin-bottom: 0.9rem; }
-.control-label {
-    display: block; font-size: 0.72rem; color: #8fa8c8;
-    margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
-}
-select {
-    width: 100%; padding: 0.7rem 0.9rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.25); background: rgba(6,16,26,0.7);
-    color: #e8f0ff; font-family: inherit; font-size: 0.88rem;
-}
-select:focus { outline: none; border-color: #4a9eff; }
+    .passion-card:hover {
+      transform: translateY(-12px) scale(1.02) rotate(0.5deg);
+      border-color: #b3ff66;
+      box-shadow: 0 30px 40px -10px #000, 0 0 60px #b3ff66, 0 0 100px #4a7a1e;
+    }
 
-.btn-primary {
-    width: 100%; padding: 1.1rem; border-radius: 14px; border: none;
-    background: linear-gradient(135deg, #4a9eff, #5eb8ff);
-    color: #fff; font-size: 1rem; font-weight: 600;
-    cursor: pointer; margin-bottom: 1rem;
-    box-shadow: 0 8px 32px rgba(74,158,255,0.45);
-}
-.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    @keyframes cardGlow {
+      0% { border-color: #4a7a1e; }
+      100% { border-color: #8bc34a; }
+    }
 
-.btn-stop {
-    width: 100%; padding: 0.8rem; border-radius: 12px;
-    border: 1px solid #f87171; background: rgba(12,20,40,0.8);
-    color: #f87171; font-size: 0.85rem; font-weight: 600;
-    cursor: pointer; margin-bottom: 1rem; display: none;
-}
-.btn-stop.visible { display: block; }
+    .card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 3px solid #b3ff66;
+      transition: transform 0.4s, filter 0.4s;
+      filter: brightness(0.9) contrast(1.1);
+      background: #1e2e14;
+    }
 
-.queue { margin-top: 1rem; position: relative; z-index: 1; }
-.queue-item {
-    display: flex; align-items: center; gap: 0.8rem;
-    padding: 0.7rem 0.8rem; border-radius: 10px;
-    border: 1px solid rgba(74,158,255,0.2); margin-bottom: 0.4rem;
-    background: rgba(15,26,46,0.85); font-size: 0.82rem;
-}
-.queue-item.done { border-color: #4ade80; }
-.queue-item.failed { border-color: #f87171; }
-.queue-item.processing { border-color: #4a9eff; }
-.queue-item .q-status { margin-left: auto; font-size: 0.72rem; color: #8fa8c8; }
+    .passion-card:hover .card-img {
+      transform: scale(1.05);
+      filter: brightness(1.2) contrast(1.2) saturate(1.3);
+    }
 
-.gallery { margin-top: 1.5rem; position: relative; z-index: 1; }
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; }
-.gallery-item { border-radius: 12px; overflow: hidden; border: 1px solid rgba(74,158,255,0.25); background: #000; }
-.gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
-.gallery-item .g-caption { padding: 0.4rem 0.6rem; background: rgba(15,26,46,0.95); font-size: 0.7rem; color: #8fa8c8; }
+    .card-content {
+      padding: 1.5rem 1.3rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
 
-.status-bar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(90deg, #4a9eff, #5eb8ff);
-    color: #fff; padding: 0.7rem 1rem; font-size: 0.8rem;
-    display: flex; align-items: center; gap: 0.6rem;
-    transform: translateY(100%); transition: transform 0.3s; z-index: 100;
-}
-.status-bar.visible { transform: translateY(0); }
-.spinner {
-    width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff; border-radius: 50%;
-    animation: spin 0.8s linear infinite; flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+    .card-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #d4ffb0;
+      text-shadow: 0 0 15px #3a6b1a;
+    }
 
-.toast {
-    position: fixed; top: 1.5rem; left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: #e8f0ff; color: #0f1a2e;
-    padding: 0.85rem 1.4rem; border-radius: 12px;
-    font-size: 0.85rem; font-weight: 600;
-    z-index: 1000; opacity: 0;
-    transition: transform 0.35s, opacity 0.35s;
-    max-width: 90vw; text-align: center;
-}
-.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.success { background: #4ade80; }
-.toast.error { background: #f87171; color: #fff; }
-.toast.warn { background: #fbbf24; }
+    .card-desc {
+      font-size: 1rem;
+      color: #c0d6b0;
+      line-height: 1.5;
+    }
 
-.signature { text-align: center; margin: 3rem auto 1.5rem; padding: 0.5rem 0; position: relative; z-index: 1; user-select: none; }
-.signature span {
-    display: inline-block;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-size: 1.35rem; font-weight: 900; letter-spacing: 0.06em; font-style: italic;
-    background: linear-gradient(135deg, #ffd966 0%, #ffeaa7 20%, #5eb8ff 50%, #4a9eff 75%, #ffd966 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    animation: signatureShine 5s ease-in-out infinite;
-    text-shadow:
-        1px 1px 0 rgba(255,217,102,0.6),
-        2px 2px 0 rgba(74,158,255,0.55),
-        3px 3px 0 rgba(50,90,180,0.5),
-        4px 4px 0 rgba(30,60,140,0.45),
-        5px 5px 0 rgba(15,30,100,0.4),
-        6px 6px 8px rgba(0,0,0,0.6);
-}
-@keyframes signatureShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    /* barre de compétences */
+    .skills-section {
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 40px;
+      padding: 2.5rem 2rem;
+      border: 2px dashed #8bc34a;
+      box-shadow: 0 0 40px rgba(180, 255, 100, 0.2);
+      margin: 2rem 0 1rem;
+      transition: box-shadow 0.3s;
+    }
 
-#noSleepCanvas, #noSleepVideo {
-    position: fixed; top: 0; left: 0; width: 1px; height: 1px;
-    opacity: 0.01; pointer-events: none; z-index: -1;
-}
+    .skills-title {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 1.8rem;
+      text-align: center;
+      color: #b3ff66;
+      text-shadow: 0 0 25px #8bc34a;
+    }
 
-/* ═══ MODE MOBILE AUTO ═══ */
-@media (max-width: 768px) {
-    h1 { font-size: 1.15rem; line-height: 1.25; letter-spacing: 0.01em; }
-    #bg3d .grid { background-size: 60px 60px, 60px 60px; animation-duration: 40s; }
-    .signature span { font-size: 1.05rem; letter-spacing: 0.04em; }
-    #bg3d .halo { filter: blur(40px); }
-    #bg3d .halo.h3 { display: none; }
-    #sideEffects .beam.b3,
-    #sideEffects .beam.b4,
-    #sideEffects .shape { display: none; }
-    #sideEffects .spark-bolt.sb3,
-    #sideEffects .spark-bolt.sb4,
-    #sideEffects .spark-bolt.sb5,
-    #sideEffects .spark-bolt.sb6 { display: none; }
-    .btn-primary { animation: none; }
-    .panel, .section, .upload-zone, .queue-item, .gallery-item { transition: none; }
-    #smokeCanvas { opacity: 0.35; }
-    #circuitCanvas { opacity: 0.5; }
-}
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s;
+    }
 
-/* ═══ MODE LÉGER (activé manuellement) ═══ */
-body.light-mode #circuitCanvas,
-body.light-mode #sideEffects { display: none !important; }
-body.light-mode #smokeCanvas { opacity: 0.25 !important; }
-body.light-mode #bg3d .grid { animation-duration: 60s !important; }
-body.light-mode #bg3d .grid::before { animation: none !important; }
-body.light-mode #bg3d .halo { animation: none !important; opacity: 0.4 !important; }
-body.light-mode .btn-primary { animation: none !important; }
-body.light-mode #lpepoPopup { display: none !important; }
-</style>
+    .skill-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #e0f0d0;
+      text-shadow: 0 0 8px #000;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .skill-bar-bg {
+      background: #1e2e14;
+      height: 22px;
+      border-radius: 20px;
+      border: 1px solid #6a994e;
+      overflow: hidden;
+      box-shadow: inset 0 0 15px #000000;
+      position: relative;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #b3ff66, #f9ffb0);
+      border-radius: 20px;
+      box-shadow: 0 0 20px #b3ff66, 0 0 40px #6a994e;
+      transition: width 0.4s ease-out, box-shadow 0.3s, filter 0.3s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #0a1307;
+      text-shadow: 0 0 5px #ffffff80;
+    }
+
+    /* ========== ÉTAT ACTIF DE LA BARRE ========== */
+    .skill-item.active {
+      transform: scale(1.02);
+    }
+
+    .skill-item.active .skill-label {
+      color: #ffffff;
+      text-shadow: 0 0 15px #b3ff66, 0 0 30px #b3ff66;
+    }
+
+    .skill-item.active .skill-bar-bg {
+      border-color: #f0ffe0;
+      box-shadow: 0 0 30px #b3ff66, inset 0 0 20px rgba(180, 255, 100, 0.4);
+      animation: barPulse 1s infinite alternate;
+    }
+
+    .skill-item.active .skill-bar-fill {
+      box-shadow: 0 0 30px #f0ffb0, 0 0 60px #b3ff66, 0 0 100px #6a994e;
+      filter: brightness(1.3) saturate(1.4);
+      animation: fillGlow 0.8s infinite alternate;
+    }
+
+    @keyframes barPulse {
+      0% { box-shadow: 0 0 20px #b3ff66, inset 0 0 15px rgba(180, 255, 100, 0.3); }
+      100% { box-shadow: 0 0 45px #f0ffb0, 0 0 70px #b3ff66, inset 0 0 25px rgba(180, 255, 100, 0.6); }
+    }
+
+    @keyframes fillGlow {
+      0% { filter: brightness(1.2) saturate(1.3); }
+      100% { filter: brightness(1.6) saturate(1.6); }
+    }
+
+    /* bouton youtube */
+    .youtube-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: linear-gradient(145deg, #cc0000, #ff3333);
+      border: none;
+      border-radius: 100px;
+      padding: 1.2rem 3rem;
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 20px black;
+      box-shadow: 0 0 30px #ff0000, 0 10px 20px -5px black;
+      transition: all 0.2s;
+      text-decoration: none;
+      margin: 1rem auto 2rem;
+      width: fit-content;
+      border: 2px solid #ffb3b3;
+      cursor: none;
+      animation: btnPulse 2s infinite alternate;
+    }
+
+    .youtube-btn:hover {
+      transform: scale(1.1);
+      background: #ff1a1a;
+      box-shadow: 0 0 60px #ff0000, 0 0 120px #ff6666;
+      border-color: white;
+    }
+
+    @keyframes btnPulse {
+      0% { box-shadow: 0 0 20px #ff0000, 0 10px 20px -5px black; }
+      100% { box-shadow: 0 0 50px #ff0000, 0 0 80px #ff6666, 0 10px 20px -5px black; }
+    }
+
+    .signature {
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 1.5rem 0 0.5rem;
+      color: #a0b890;
+      letter-spacing: 2px;
+      border-top: 2px solid #4a7a1e;
+      margin-top: 2rem;
+      text-shadow: 0 0 10px #2a4a1e;
+      font-style: italic;
+    }
+
+    @media (max-width: 700px) {
+      .wrapper { padding: 1.5rem 0.8rem; }
+      .tab { font-size: 1rem; padding: 0.7rem 1.3rem; }
+      .main-title { font-size: 2.2rem; }
+      .youtube-btn { font-size: 1.3rem; padding: 0.9rem 1.8rem; }
+      .skill-label { font-size: 1rem; }
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- FOND 3D -->
-<div id="bg3d">
-    <div class="grid"></div>
-    <div class="halo h1"></div>
-    <div class="halo h2"></div>
-    <div class="halo h3"></div>
-</div>
+  <div class="cursor" id="cursor"></div>
+  <div class="dust" id="dust"></div>
 
-<!-- EFFETS LATÉRAUX + ÉCLAIRS -->
-<div id="sideEffects">
-    <div class="beam b1"></div>
-    <div class="beam b2"></div>
-    <div class="beam b3"></div>
-    <div class="beam b4"></div>
-    <div class="spark s1"></div>
-    <div class="spark s2"></div>
-    <div class="spark s3"></div>
-    <div class="spark s4"></div>
-    <div class="spark s5"></div>
-    <div class="spark s6"></div>
-    <div class="shape sh1"></div>
-    <div class="shape sh2"></div>
-    <div class="shape sh3"></div>
+  <div class="bg-anim">
+    <div class="halo halo1"></div>
+    <div class="halo halo2"></div>
+    <div class="halo halo3"></div>
+    <div class="lines"></div>
+  </div>
+  <div class="flash"></div>
 
-    <div class="spark-bolt sb1"></div>
-    <div class="spark-bolt sb2"></div>
-    <div class="spark-bolt sb3"></div>
-    <div class="spark-bolt sb4"></div>
-    <div class="spark-bolt sb5"></div>
-    <div class="spark-bolt sb6"></div>
-</div>
+  <div class="wrapper">
+    <h1 class="main-title">
+      LnoaX_GTR_<span class="title-cursor"></span>
+    </h1>
 
-<!-- CANVAS -->
-<canvas id="circuitCanvas"></canvas>
-<canvas id="smokeCanvas"></canvas>
-
-<!-- HEADER -->
-<header>
-    <h1>⚡ La magie d'Lpepo et de L'Intelligence Artificielle ⚡</h1>
-    <p class="subtitle">Donnez vie à vos images</p>
-</header>
-
-<!-- INFO BANNER -->
-<div class="info-banner">
-    <strong>Comment ça marche :</strong> Ajoutez vos images, choisissez un thème visuel, l'IA transforme chaque photo en <strong>scène fantastique animée</strong> - fées, dragons, poussière d'étoiles, personnage magique.. Format <strong>portrait 9:16</strong> et format <strong>paysage 16:9</strong>.
-</div>
-
-<!-- CLÉ API -->
-<div class="panel" id="api-panel">
-    <input type="password" class="api-key-input" id="api-key-input"
-           placeholder="Collez votre clé API ici (sk-...)" autocomplete="off" spellcheck="false">
-    <button type="button" class="api-save-btn" id="api-save-btn">💾 Enregistrer la clé</button>
-    <div class="status-line" id="api-status-line">
-        <span class="status-dot"></span>
-        <span id="api-status-text">Aucune clé API enregistrée</span>
+    <div class="tabs">
+      <div class="tab" data-target="moto" data-skill-id="moto">🏁 MOTO CROSS</div>
+      <div class="tab" data-target="gaming" data-skill-id="gaming">🎮 GAMING PC</div>
+      <div class="tab" data-target="rc" data-skill-id="rc">🚗 RC DRIFT</div>
+      <div class="tab" data-target="peche" data-skill-id="peche">🎣 PÊCHE</div>
     </div>
-    <div class="hint">
-        Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank" rel="noopener">platform.agnes-ai.com</a> → Settings → API Keys
-    </div>
-</div>
 
-<!-- UPLOAD -->
-<div class="upload-zone" id="upload-zone">
-    <input type="file" id="file-input" accept="image/*" multiple>
-    <div class="upload-icon">＋</div>
-    <div class="upload-text">Cliquez ici pour ajouter vos images</div>
-    <div class="upload-hint">Autant que vous voulez — chacune deviendra une vidéo</div>
-</div>
-
-<div class="images-grid" id="images-grid"></div>
-
-<!-- SECTION PROMPT -->
-<div class="section open" id="section-prompt">
-    <div class="section-header" data-toggle="section-prompt">
-        <span class="section-title">✍️ Votre vision</span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body">
-        <div class="section-content">
-            <textarea class="prompt-main" id="main-prompt"
-                placeholder="Décrivez votre vision. Exemple : « Donne vie à cette scène. Des fées dansent autour du sujet dans une traînée de poussière d'étoile. Un dragon traverse le ciel violet. Lumière irréelle. Garde chaque sujet identique à la photo. »"></textarea>
-            <div class="prompt-presets" id="prompt-presets"></div>
+    <div class="passions-grid" id="passionsGrid">
+      <div class="passion-card" id="moto" data-skill="68" data-skill-id="moto">
+        <img class="card-img" src="https://s7g10.scene7.com/is/image/ktm/KTM-motocross-50-sx-my27-header-segment-page:Medium?wid=1066&hei=800&dpr=off" alt="Moto cross KTM dans un champ">
+        <div class="card-content">
+          <div class="card-title">Moto cross</div>
+          <div class="card-desc">Adrénaline, sauts, terre et puissance. La moto cross c'est la liberté sur deux roues.</div>
         </div>
-    </div>
-</div>
+      </div>
 
-<!-- SECTION STYLE -->
-<div class="section" id="section-style">
-    <div class="section-header" data-toggle="section-style">
-        <span class="section-title">🎨 Thème visuel</span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body">
-        <div class="section-content">
-            <div class="styles-grid" id="styles-grid"></div>
+      <div class="passion-card" id="gaming" data-skill="78" data-skill-id="gaming">
+        <img class="card-img" src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600&auto=format&fit=crop&q=80" alt="Setup gaming PC RGB">
+        <div class="card-content">
+          <div class="card-title">Gaming PC</div>
+          <div class="card-desc">FPS, courses, simulation... La puissance du PC et des néons pour des sessions sans fin.</div>
         </div>
-    </div>
-</div>
+      </div>
 
-<!-- BOUTON MODE LÉGER -->
-<div style="text-align: center; margin-bottom: 1rem; position: relative; z-index: 1;">
-    <button type="button" id="light-mode-btn" style="background: rgba(74,158,255,0.15); border: 1px solid rgba(74,158,255,0.4); color: #4a9eff; padding: 0.6rem 1.2rem; border-radius: 10px; font-family: inherit; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">
-        ⚡ Activer le mode léger
-    </button>
-</div>
-
-<!-- SECTION TECHNIQUE -->
-<div class="section" id="section-tech">
-    <div class="section-header" data-toggle="section-tech">
-        <span class="section-title">📷 Réglages techniques</span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body">
-        <div class="section-content">
-            <div class="control-row">
-                <label class="control-label">Format vidéo</label>
-                <select id="format-select">
-                    <option value="9:16" selected>Portrait 9:16 (vertical — TikTok, Reels)</option>
-                    <option value="16:9">Paysage 16:9 (horizontal — YouTube, TV)</option>
-                </select>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Qualité vidéo</label>
-                <select id="resolution-select">
-                    <option value="480p">480p — vidéos longues (jusqu'à 40s)</option>
-                    <option value="720p" selected>720p — équilibré (jusqu'à 20s)</option>
-                    <option value="1080p">1080p — HD (jusqu'à 10s)</option>
-                </select>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Durée</label>
-                <select id="duration-select">
-                    <!-- Les options sont générées dynamiquement en JS -->
-                </select>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Cadrage</label>
-                <select id="framing-select">
-                    <option value="random">Aléatoire</option>
-                    <option value="close">Très serré</option>
-                    <option value="medium">Moyen</option>
-                    <option value="wide">Large</option>
-                </select>
-            </div>
-            <div class="control-row">
-                <label class="control-label">Intensité du mouvement</label>
-                <select id="intensity-select">
-                    <option value="random">Aléatoire</option>
-                    <option value="subtle">Subtile</option>
-                    <option value="moderate">Modérée</option>
-                    <option value="strong">Forte</option>
-                </select>
-            </div>
+      <div class="passion-card" id="rc" data-skill="60" data-skill-id="rc">
+        <img class="card-img" src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=600&auto=format&fit=crop&q=80" alt="Voiture radiocommandée drift">
+        <div class="card-content">
+          <div class="card-title">RC Drift</div>
+          <div class="card-desc">Glisse contrôlée, petits bolides et grosses sensations. Le drift à l'échelle 1/10.</div>
         </div>
+      </div>
+
+      <div class="passion-card" id="peche" data-skill="45" data-skill-id="peche">
+        <img class="card-img" src="https://c8.alamy.com/compfr/px6cx2/la-peche-du-poisson-blanc-isole-sur-logo-vector-illustration-px6cx2.jpg" alt="Logo pêche au poisson, canne à pêche">
+        <div class="card-content">
+          <div class="card-title">Pêche</div>
+          <div class="card-desc">Calme, nature et patience. Un moment de paix au bord de l'eau, canne à la main.</div>
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- BOUTONS -->
-<button type="button" class="btn-primary" id="generate-btn" disabled>✨ Créer les vidéos</button>
-<button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter</button>
+    <div class="skills-section">
+      <div class="skills-title">⚡ COMPÉTENCES / EXPÉRIENCES ⚡</div>
 
-<!-- FILE D'ATTENTE -->
-<div class="queue" id="queue" style="display:none;"></div>
+      <div class="skill-item" id="skill-item-moto">
+        <div class="skill-label">
+          <span>🏍️ Moto cross</span>
+          <span id="skill-moto-val">68%</span>
+        </div>
+        <div class="skill-bar-bg">
+          <div class="skill-bar-fill" id="skill-moto" style="width: 68%;">68%</div>
+        </div>
+      </div>
 
-<!-- GALERIE -->
-<div class="gallery" id="gallery" style="display:none;">
-    <div class="section-title" style="margin-bottom:0.8rem;">Vidéos générées</div>
-    <div class="gallery-grid" id="gallery-grid"></div>
-</div>
+      <div class="skill-item" id="skill-item-gaming">
+        <div class="skill-label">
+          <span>💻 PC Gaming</span>
+          <span id="skill-gaming-val">78%</span>
+        </div>
+        <div class="skill-bar-bg">
+          <div class="skill-bar-fill" id="skill-gaming" style="width: 78%;">78%</div>
+        </div>
+      </div>
 
-<!-- PSEUDO LPEPO (animation) -->
-<div id="lpepoPopup">Lpepo</div>
+      <div class="skill-item" id="skill-item-rc">
+        <div class="skill-label">
+          <span>🏎️ RC Drift</span>
+          <span id="skill-rc-val">60%</span>
+        </div>
+        <div class="skill-bar-bg">
+          <div class="skill-bar-fill" id="skill-rc" style="width: 60%;">60%</div>
+        </div>
+      </div>
 
-<!-- SIGNATURE -->
-<div class="signature">
-    <span>since @ LpepoLnK 2026</span>
-</div>
+      <div class="skill-item" id="skill-item-peche">
+        <div class="skill-label">
+          <span>🎣 Pêche</span>
+          <span id="skill-peche-val">45%</span>
+        </div>
+        <div class="skill-bar-bg">
+          <div class="skill-bar-fill" id="skill-peche" style="width: 45%;">45%</div>
+        </div>
+      </div>
+    </div>
 
-<!-- STATUS BAR -->
-<div class="status-bar" id="status-bar">
-    <div class="spinner"></div>
-    <span id="status-text">Préparation…</span>
-</div>
+    <a href="https://www.youtube.com/@Lpepomovies/" target="_blank" rel="noopener noreferrer" class="youtube-btn">
+      ▶ YOUTUBE · Lpepomovies
+    </a>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+    <div class="signature">
+      since @ LnoaX_GTR_ 2026
+    </div>
+  </div>
 
-<!-- ANTI-VEILLE -->
-<canvas id="noSleepCanvas" width="2" height="2"></canvas>
-<video id="noSleepVideo" playsinline muted loop></video>
+  <script>
+    (function() {
+      const cursor = document.getElementById('cursor');
+      const dust = document.getElementById('dust');
 
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let dustX = mouseX;
+      let dustY = mouseY;
 
-<script>
-// ══════════════════════════════════════════════════════════
-// CIRCUITS ÉLECTRIQUES
-// ══════════════════════════════════════════════════════════
-(function initCircuits() {
-    const canvas = document.getElementById('circuitCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let W = 0, H = 0;
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    function resize() {
-        W = window.innerWidth; H = window.innerHeight;
-        canvas.width = W * DPR; canvas.height = H * DPR;
-        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-    resize();
-    window.addEventListener('resize', resize);
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      });
 
-    const circuits = [];
-    const MAX_CIRCUITS = 8;
+      function animateDust() {
+        dustX += (mouseX - dustX) * 0.12;
+        dustY += (mouseY - dustY) * 0.12;
 
-    function createCircuit() {
-        const startX = Math.random() * W;
-        const startY = Math.random() * H;
-        const segments = [];
-        let cx = startX, cy = startY;
-        const numSegments = 3 + Math.floor(Math.random() * 4);
-        let dir = Math.floor(Math.random() * 4);
-        for (let i = 0; i < numSegments; i++) {
-            const len = 30 + Math.random() * 90;
-            let nx = cx, ny = cy;
-            if (dir === 0) ny = cy - len;
-            else if (dir === 1) nx = cx + len;
-            else if (dir === 2) ny = cy + len;
-            else nx = cx - len;
-            segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
-            cx = nx; cy = ny;
-            dir = (dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+        const offsetX = (Math.random() - 0.5) * 18;
+        const offsetY = (Math.random() - 0.5) * 18;
+
+        dust.style.left = (dustX + offsetX) + 'px';
+        dust.style.top = (dustY + offsetY) + 'px';
+
+        const size = 50 + Math.sin(Date.now() * 0.008) * 15;
+        dust.style.width = size + 'px';
+        dust.style.height = size + 'px';
+
+        requestAnimationFrame(animateDust);
+      }
+
+      animateDust();
+
+      const tabs = document.querySelectorAll('.tab');
+      const cards = document.querySelectorAll('.passion-card');
+
+      /* =====================================================
+         FONCTION UTILITAIRE : ACTIVER UNE BARRE + ANIMER LE REMPLISSAGE
+         ===================================================== */
+      function activateSkillBar(skillId) {
+        const skillItem = document.getElementById('skill-item-' + skillId);
+        if (!skillItem) return;
+
+        // retire l'état actif des autres
+        document.querySelectorAll('.skill-item').forEach(el => el.classList.remove('active'));
+        // active celui correspondant
+        skillItem.classList.add('active');
+
+        // animation de remplissage : on repart de 0 puis on remet la largeur finale
+        const fill = skillItem.querySelector('.skill-bar-fill');
+        const valSpan = skillItem.querySelector('.skill-label span:last-child');
+        if (fill) {
+          const finalWidth = fill.dataset.width || fill.style.width;
+          if (!fill.dataset.width) fill.dataset.width = finalWidth;
+          fill.style.width = '0%';
+          if (valSpan) valSpan.textContent = '0%';
+          setTimeout(() => {
+            fill.style.width = fill.dataset.width;
+            if (valSpan) valSpan.textContent = fill.dataset.width;
+          }, 40);
         }
-        return {
-            segments, age: 0,
-            maxLife: 3 + Math.random() * 4,
-            hue: 200 + Math.random() * 60,
-            pulsePhase: Math.random() * Math.PI * 2
-        };
-    }
+      }
 
-    let lastSpawn = 0;
-    const SPAWN_INTERVAL = 1200;
+      function deactivateSkillBar(skillId) {
+        const skillItem = document.getElementById('skill-item-' + skillId);
+        if (!skillItem) return;
+        // on ne retire pas si l'onglet OU la carte correspondante est encore survolé
+        const correspondingTab = document.querySelector(`.tab[data-skill-id="${skillId}"]`);
+        const correspondingCard = document.querySelector(`.passion-card[data-skill-id="${skillId}"]`);
+        if (correspondingTab && correspondingTab.matches(':hover')) return;
+        if (correspondingCard && correspondingCard.matches(':hover')) return;
+        skillItem.classList.remove('active');
+      }
 
-    function tick(now) {
-        ctx.clearRect(0, 0, W, H);
-        ctx.globalCompositeOperation = 'lighter';
-        if (now - lastSpawn > SPAWN_INTERVAL && circuits.length < MAX_CIRCUITS) {
-            circuits.push(createCircuit());
-            lastSpawn = now + (Math.random() * 800);
-        }
-        const dt = 1 / 60;
-        for (let i = circuits.length - 1; i >= 0; i--) {
-            const c = circuits[i];
-            c.age += dt;
-            const t = c.age / c.maxLife;
-            let alpha = 1;
-            if (t < 0.2) alpha = t / 0.2;
-            else if (t > 0.7) alpha = Math.max(0, (1 - t) / 0.3);
-            if (c.age >= c.maxLife) { circuits.splice(i, 1); continue; }
-            c.pulsePhase += dt * 3;
-            const pulse = 0.7 + Math.sin(c.pulsePhase) * 0.3;
+      /* =====================================================
+         SURVOL DES ONGLETS → ILLUMINATION DE LA BARRE
+         ===================================================== */
+      tabs.forEach(tab => {
+        const skillId = tab.dataset.skillId;
 
-            ctx.lineWidth = 1.5;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.strokeStyle = 'hsla(' + c.hue + ', 90%, 70%, ' + (alpha * 0.6 * pulse) + ')';
-            ctx.shadowColor = 'hsla(' + c.hue + ', 100%, 70%, ' + (alpha * 0.9) + ')';
-            ctx.shadowBlur = 12 * pulse;
-
-            ctx.beginPath();
-            for (const seg of c.segments) {
-                ctx.moveTo(seg.x1, seg.y1);
-                ctx.lineTo(seg.x2, seg.y2);
-            }
-            ctx.stroke();
-
-            ctx.shadowBlur = 8;
-            ctx.fillStyle = 'hsla(' + c.hue + ', 100%, 80%, ' + (alpha * 0.9) + ')';
-            for (const seg of c.segments) {
-                ctx.beginPath();
-                ctx.arc(seg.x2, seg.y2, 2, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            const first = c.segments[0];
-            if (first) {
-                ctx.beginPath();
-                ctx.arc(first.x1, first.y1, 2.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        ctx.shadowBlur = 0;
-        ctx.globalCompositeOperation = 'source-over';
-        requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-})();
-
-// ══════════════════════════════════════════════════════════
-// ÉCRAN DE FUMÉE DERRIÈRE LA SOURIS
-// ══════════════════════════════════════════════════════════
-(function initSmoke() {
-    const canvas = document.getElementById('smokeCanvas');
-    if (!canvas) return;
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
-    const ctx = canvas.getContext('2d');
-    let W = 0, H = 0;
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    function resize() {
-        W = window.innerWidth; H = window.innerHeight;
-        canvas.width = W * DPR; canvas.height = H * DPR;
-        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    const mouse = { x: W / 2, y: H / 2, tx: W / 2, ty: H / 2, active: false };
-    window.addEventListener('mousemove', e => { mouse.tx = e.clientX; mouse.ty = e.clientY; mouse.active = true; });
-    window.addEventListener('mouseleave', () => { mouse.active = false; });
-    window.addEventListener('touchmove', e => {
-        if (e.touches[0]) { mouse.tx = e.touches[0].clientX; mouse.ty = e.touches[0].clientY; mouse.active = true; }
-    }, { passive: true });
-    window.addEventListener('touchend', () => { mouse.active = false; });
-
-    const particles = [];
-    const MAX_PARTICLES = 30;
-
-    function spawn() {
-        if (!mouse.active) return;
-        if (particles.length >= MAX_PARTICLES) return;
-        const angle = Math.random() * Math.PI * 2;
-        const radius = Math.random() * 8;
-        particles.push({
-            x: mouse.x + Math.cos(angle) * radius + (Math.random() - 0.5) * 6,
-            y: mouse.y + Math.sin(angle) * radius + (Math.random() - 0.5) * 6,
-            vx: (Math.random() - 0.5) * 0.4,
-            vy: (Math.random() - 0.5) * 0.4 - 0.1,
-            life: 1,
-            decay: 0.012 + Math.random() * 0.015,
-            size: 15 + Math.random() * 25
+        tab.addEventListener('mouseenter', () => {
+          activateSkillBar(skillId);
         });
-    }
 
-    function tick() {
-        mouse.x += (mouse.tx - mouse.x) * 0.12;
-        mouse.y += (mouse.ty - mouse.y) * 0.12;
-        ctx.clearRect(0, 0, W, H);
-        ctx.globalCompositeOperation = 'lighter';
-        if (mouse.active) { for (let i = 0; i < 2; i++) spawn(); }
-        for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.x += p.vx; p.y += p.vy;
-            p.vx *= 0.98; p.vy *= 0.98; p.vy -= 0.0015;
-            p.life -= p.decay;
-            if (p.life <= 0) { particles.splice(i, 1); continue; }
-            const alpha = p.life * 0.08;
-            const r = p.size * (1.1 - p.life * 0.4);
-            const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-            grad.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
-            grad.addColorStop(0.5, 'rgba(255, 255, 255, ' + (alpha * 0.4) + ')');
-            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.globalCompositeOperation = 'source-over';
-        requestAnimationFrame(tick);
-    }
-    tick();
-})();
-
-// ══════════════════════════════════════════════════════════
-// ANIMATION PSEUDO "Lpepo" — apparaît sur les côtés
-// ══════════════════════════════════════════════════════════
-(function initLpepoPopup() {
-    const popup = document.getElementById('lpepoPopup');
-    if (!popup) {
-        console.warn('[Lpepo] Élément #lpepoPopup introuvable');
-        return;
-    }
-
-    const positions = [
-        { x: 5,  y: 15 }, { x: 12, y: 30 }, { x: 4,  y: 50 }, { x: 10, y: 70 }, { x: 6,  y: 85 },
-        { x: 78, y: 15 }, { x: 85, y: 32 }, { x: 80, y: 52 }, { x: 88, y: 72 }, { x: 82, y: 88 },
-        { x: 15, y: 22 }, { x: 75, y: 25 }, { x: 18, y: 78 }, { x: 72, y: 82 }
-    ];
-
-    function triggerLpepo() {
-        const pos = positions[Math.floor(Math.random() * positions.length)];
-        const rotation = (Math.random() * 50 - 25).toFixed(1);
-
-        popup.style.left = pos.x + '%';
-        popup.style.top = pos.y + '%';
-        popup.style.setProperty('--rot', rotation + 'deg');
-
-        popup.classList.remove('show');
-        void popup.offsetWidth;
-        popup.classList.add('show');
-
-        const nextDelay = 30000 + Math.random() * 30000;
-        setTimeout(triggerLpepo, nextDelay);
-    }
-
-    console.log('[Lpepo] Animation prête');
-    setTimeout(triggerLpepo, 8000 + Math.random() * 5000);
-})();
-
-// ══════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════
-const API_BASE = 'https://apihub.agnes-ai.com/v1';
-const POLL_BASE = 'https://apihub.agnes-ai.com/agnesapi';
-const MODEL_VIDEO = 'agnes-video-v2.0';
-const FRAME_RATE = 24;
-
-let createIntervalMs = 62000;
-const CREATE_INTERVAL_MIN = 62000;
-const CREATE_INTERVAL_MAX = 90000;
-const POLL_INTERVAL_SEC = 20;
-const MAX_POLL_ATTEMPTS = 100;
-const API_KEY_STORAGE = 'fantasy_api_key';
-const MAX_IMAGE_SIZE = 12 * 1024 * 1024;
-const THUMBNAIL_MAX_WIDTH = 200;
-
-// ══════════════════════════════════════════════════════════
-// LIMITES DE QUALITÉ (API Agnes v2.0)
-// ══════════════════════════════════════════════════════════
-const RESOLUTION_LIMITS = {
-    '480p':  { maxFrames: 961, durations: [5, 10, 15, 20, 25, 30, 35, 40] },
-    '720p':  { maxFrames: 481, durations: [5, 6, 10, 15, 20] },
-    '1080p': { maxFrames: 241, durations: [5, 6, 10] }
-};
-
-function secondsToFrames(seconds) {
-    const idealFrames = Math.round(seconds * FRAME_RATE);
-    const n = Math.round((idealFrames - 1) / 8);
-    return 8 * n + 1;
-}
-
-function renderDurationOptions(resolution) {
-    const select = document.getElementById('duration-select');
-    if (!select) return;
-    const config = RESOLUTION_LIMITS[resolution] || RESOLUTION_LIMITS['720p'];
-    const previousValue = parseInt(select.value, 10);
-
-    select.innerHTML = config.durations.map(function(sec) {
-        const frames = secondsToFrames(sec);
-        const label = sec + ' seconde' + (sec > 1 ? 's' : '');
-        const isDefault = (sec === 6 || (sec === 5 && config.durations[0] === 5 && config.durations[1] !== 6));
-        return '<option value="' + frames + '"' + (isDefault ? ' selected' : '') + '>' + label + '</option>';
-    }).join('');
-
-    if (previousValue && config.durations.some(function(s) { return secondsToFrames(s) === previousValue; })) {
-        select.value = previousValue;
-    }
-
-    state.durationFrames = parseInt(select.value, 10);
-    console.log('[Fantasy] Qualité ' + resolution + ' → durée : ' + select.options[select.selectedIndex].text);
-}
-
-// ══════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════
-const state = {
-    images: [],
-    isRunning: false,
-    stopRequested: false,
-    queue: [],
-    completed: 0,
-    failed: 0,
-    selectedEffect: null,
-    mainPrompt: '',
-    format: '9:16',
-    resolution: '720p',
-    framing: 'random',
-    intensity: 'random',
-    durationFrames: 153,
-    isLoadingImages: false
-};
-
-const memStore = {};
-function storageGet(k) {
-    try { const v = localStorage.getItem(k); if (v !== null) return v; } catch(e){}
-    return memStore[k] !== undefined ? memStore[k] : null;
-}
-function storageSet(k, v) {
-    memStore[k] = v;
-    try { localStorage.setItem(k, v); } catch(e){}
-}
-function storageRemove(k) {
-    delete memStore[k];
-    try { localStorage.removeItem(k); } catch(e){}
-}
-
-// ══════════════════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════════════════
-let toastTimeout = null;
-function showToast(msg, type, duration) {
-    type = type || 'success';
-    duration = duration || 2500;
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    toast.classList.remove('visible','success','error','warn');
-    void toast.offsetWidth;
-    const icons = { success: '✓', error: '✕', warn: '⚠' };
-    toast.textContent = (icons[type] || '') + ' ' + msg;
-    toast.classList.add(type);
-    requestAnimationFrame(() => toast.classList.add('visible'));
-    if (toastTimeout) clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toast.classList.remove('visible'), duration);
-}
-
-// ══════════════════════════════════════════════════════════
-// CLÉ API
-// ══════════════════════════════════════════════════════════
-function getApiKey() { return (storageGet(API_KEY_STORAGE) || '').trim(); }
-
-function saveApiKey() {
-    const input = document.getElementById('api-key-input');
-    if (!input) return;
-    const key = input.value.trim();
-    if (!key) {
-        storageRemove(API_KEY_STORAGE);
-        updateApiPanel();
-        showToast('Clé supprimée', 'warn');
-        return;
-    }
-    if (key.length < 10) {
-        showToast('Clé trop courte', 'error');
-        return;
-    }
-    storageSet(API_KEY_STORAGE, key);
-    updateApiPanel();
-    showToast('Clé API enregistrée ✓', 'success');
-    input.blur();
-}
-
-function updateApiPanel() {
-    const panel = document.getElementById('api-panel');
-    const input = document.getElementById('api-key-input');
-    const line  = document.getElementById('api-status-line');
-    const text  = document.getElementById('api-status-text');
-    if (!panel || !input || !line || !text) return;
-    const key = getApiKey();
-    if (key) {
-        panel.classList.add('ok');
-        line.classList.add('ok');
-        text.textContent = 'Clé API active · ' + key.slice(0,8) + '…' + key.slice(-4);
-        input.value = key;
-        input.placeholder = '';
-    } else {
-        panel.classList.remove('ok');
-        line.classList.remove('ok');
-        text.textContent = 'Aucune clé API enregistrée';
-        input.value = '';
-        input.placeholder = 'Collez votre clé API ici (sk-...)';
-    }
-    updateGenerateBtn();
-}
-
-function updateGenerateBtn() {
-    const btn = document.getElementById('generate-btn');
-    if (!btn) return;
-    const hasImages = state.images.length > 0;
-    const hasKey = !!getApiKey();
-    btn.disabled = !hasImages || !hasKey || state.isRunning || state.isLoadingImages;
-    if (state.isLoadingImages) btn.textContent = 'Chargement… (' + state.images.length + ')';
-    else if (state.isRunning) {
-        const done = state.completed + state.failed;
-        btn.textContent = 'Création en cours… (' + done + '/' + state.queue.length + ')';
-    }
-    else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
-    else if (!hasImages) btn.textContent = 'Ajoutez des images';
-    else btn.textContent = '✨ Créer ' + state.images.length + ' vidéo' + (state.images.length > 1 ? 's' : '');
-}
-
-// ══════════════════════════════════════════════════════════
-// EFFETS
-// ══════════════════════════════════════════════════════════
-const AMBIANCE = [
-    { id: 'fairies', name: 'Fées & Poussière', emoji: '🧚', desc: 'Fées, étoiles',
-      prompt: 'magical fairies dancing around the subject leaving trails of golden star dust, ethereal glowing particles, enchanted forest atmosphere. Preserve the exact subject identity.' },
-    { id: 'dragon', name: 'Dragon Lointain', emoji: '🐉', desc: 'Dragon, feu',
-      prompt: 'a distant dragon flying across a dramatic sky leaving a trail of embers, epic fantasy landscape, warm fire glow. Preserve the exact subject identity.' },
-    { id: 'potion', name: 'Potion Magique', emoji: '🧪', desc: 'Fumée, lueur',
-      prompt: 'magical swirling potion vapor glowing in purple and gold, alchemical smoke rising. Preserve the exact subject identity.' },
-    { id: 'enchanted', name: 'Forêt Enchantée', emoji: '🌳', desc: 'Bois, brume',
-      prompt: 'enchanted glowing forest at twilight, luminescent mushrooms, bioluminescent light particles. Preserve the exact subject identity.' },
-    { id: 'anime', name: 'Animé', emoji: '🌸', desc: 'Style japonais vibrant',
-      prompt: 'vibrant Japanese anime aesthetic, cel-shaded characters, expressive eyes, dynamic lighting, soft pastel color palette, subtle animation with gentle hair movement and glowing particles, atmosphere of an anime opening scene. Preserve the exact subject identity.' },
-    { id: 'cartoon', name: 'Cartoon', emoji: '🎨', desc: 'Style dessin animé joyeux',
-      prompt: 'playful cartoon animation style, bold outlines, bright saturated colors, exaggerated expressions, lively energetic movement, bouncy animation feel. Preserve the exact subject identity.' },
-    { id: 'celestial', name: 'Céleste', emoji: '✨', desc: 'Aurore, étoiles',
-      prompt: 'celestial magical atmosphere, aurora borealis colors, floating constellations, star-filled sky. Preserve the exact subject identity.' },
-    { id: 'crystal', name: 'Cristal', emoji: '💎', desc: 'Cristaux, lueur',
-      prompt: 'floating magical crystals emitting soft light, prismatic refractions, sparkling reflections. Preserve the exact subject identity.' },
-    { id: 'elven', name: 'Elfique', emoji: '🏹', desc: 'Nature, lumière',
-      prompt: 'elegant elven fantasy atmosphere, silver and green light, ancient noble forest. Preserve the exact subject identity.' },
-    { id: 'arcane', name: 'Arcane', emoji: '🔮', desc: 'Runes, magie',
-      prompt: 'arcane magic circle glowing under the subject, ancient runes floating, swirling blue and violet energy. Preserve the exact subject identity.' },
-    { id: 'fire', name: 'Feu Sacré', emoji: '🔥', desc: 'Flamme, or',
-      prompt: 'sacred fire magic, warm golden flames dancing, floating embers. Preserve the exact subject identity.' },
-    { id: 'water', name: 'Ondine', emoji: '💧', desc: 'Eau, turquoise',
-      prompt: 'magical water spirit atmosphere, luminescent water droplets, turquoise reflections. Preserve the exact subject identity.' },
-    { id: 'phoenix', name: 'Phénix', emoji: '🔥', desc: 'Renaissance, feu',
-      prompt: 'phoenix rising with fiery feathers, floating glowing embers, rebirth atmosphere. Preserve the exact subject identity.' }
-];
-
-const STYLIZE = [
-    { id: 'ghibli', name: 'Ghibli', emoji: '🌿', desc: 'Anime poétique',
-      prompt: 'Studio Ghibli anime style, Hayao Miyazaki aesthetic, hand-painted watercolor. Transform entire image.' },
-    { id: 'fairy', name: 'Conte de Fées', emoji: '👑', desc: 'Illustration',
-      prompt: 'classic fairy tale illustration, Arthur Rackham style, intricate ink linework. Transform entire image.' },
-    { id: 'tolkein', name: 'Tolkienien', emoji: '💍', desc: 'Fantasy épique',
-      prompt: 'epic high fantasy oil painting, Alan Lee style, dramatic lighting. Transform entire image.' },
-    { id: 'dark', name: 'Dark Fantasy', emoji: '💀', desc: 'Sombre',
-      prompt: 'dark fantasy aesthetic, gothic atmosphere, deep shadows, ominous mood. Transform entire image.' },
-    { id: 'stained', name: 'Vitrail', emoji: '🪟', desc: 'Médiéval',
-      prompt: 'medieval stained glass window art, lead outlines, jewel-toned colors. Transform entire image.' },
-    { id: 'painting', name: 'Peinture Huile', emoji: '🖼️', desc: 'Old Master',
-      prompt: 'classical oil painting, Old Master technique, visible brushstrokes, chiaroscuro lighting. Transform entire image.' },
-    { id: 'illustr', name: 'Illustration', emoji: '⚔️', desc: 'Livre de jeu',
-      prompt: 'fantasy role-playing game illustration, heroic proportions, vivid colors. Transform entire image.' },
-    { id: 'storybook', name: 'Livre Enfant', emoji: '📖', desc: 'Doux, coloré',
-      prompt: 'children storybook illustration, soft watercolor washes. Transform entire image.' }
-];
-
-const PRESETS = [
-    { label: '🧚 Fées', text: 'Des fées dansent autour du sujet dans une traînée de poussière d\'étoile dorée. Lumière irréelle et dorée.' },
-    { label: '🐉 Dragon', text: 'Un dragon traverse le ciel en laissant une traînée de braises.' },
-    { label: '🌳 Enchanté', text: 'Forêt enchantée illuminée par des champignons lumineux et des lucioles.' },
-    { label: '🌸 Animé', text: 'Donne à cette image un style animé japonais vibrant avec des couleurs pastel, des yeux expressifs et un léger mouvement de cheveux dans la brise.' },
-    { label: '🎨 Cartoon', text: 'Transforme cette scène en dessin animé joyeux avec des contours marqués, des couleurs vives et un mouvement énergique.' },
-    { label: '🔮 Magie Pure', text: 'Des runes magiques flottent autour du sujet dans une lueur bleue et violette.' }
-];
-
-const RANDOM_ACTIONS = [
-    'the subject slowly raises a hand toward the sky',
-    'hair and clothes move gently in a magical breeze',
-    'the subject closes their eyes and breathes slowly',
-    'the subject looks up toward the sky'
-];
-const RANDOM_CAMERA = [
-    'slow dolly-in, camera gliding forward',
-    'static locked-off frame',
-    'subtle parallax movement',
-    'slow push-in toward the face'
-];
-const RANDOM_LIGHT = [
-    'warm magical golden light',
-    'cool mystical blue glow',
-    'soft iridescent light',
-    'dramatic rim lighting'
-];
-
-const INTENSITY = {
-    subtle: 'very subtle movement, barely perceptible',
-    moderate: 'moderate movement, clear but controlled',
-    strong: 'strong dynamic movement'
-};
-const FRAMING = {
-    close: 'extreme close-up framing',
-    medium: 'medium shot, subject framed from waist up',
-    wide: 'wide shot with environment visible'
-};
-
-// ══════════════════════════════════════════════════════════
-// UTILITAIRES
-// ══════════════════════════════════════════════════════════
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function log(m) { console.log('[Fantasy]', m); }
-function randomItem(a) { return a[Math.floor(Math.random() * a.length)]; }
-function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-}
-function setStatus(t) {
-    const bar = document.getElementById('status-bar');
-    const txt = document.getElementById('status-text');
-    if (!bar || !txt) return;
-    if (t) { bar.classList.add('visible'); txt.textContent = t; }
-    else bar.classList.remove('visible');
-}
-
-// ══════════════════════════════════════════════════════════
-// IMAGES
-// ══════════════════════════════════════════════════════════
-function fileToDataUri(file) {
-    return new Promise(function(resolve, reject) {
-        const r = new FileReader();
-        r.onload = function(e) { resolve(e.target.result); };
-        r.onerror = function() { reject(new Error('Erreur lecture')); };
-        r.readAsDataURL(file);
-    });
-}
-function generateThumbnail(dataUri) {
-    return new Promise(function(resolve) {
-        const img = new Image();
-        img.onload = function() {
-            try {
-                const canvas = document.createElement('canvas');
-                const ratio = img.height / img.width;
-                canvas.width = THUMBNAIL_MAX_WIDTH;
-                canvas.height = Math.round(THUMBNAIL_MAX_WIDTH * ratio);
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                resolve(canvas.toDataURL('image/jpeg', 0.7));
-            } catch (e) { resolve(dataUri); }
-        };
-        img.onerror = function() { resolve(dataUri); };
-        img.src = dataUri;
-    });
-}
-async function processOneFile(file) {
-    if (!file.type.startsWith('image/')) return null;
-    if (file.size > MAX_IMAGE_SIZE) return null;
-    try {
-        const dataUri = await fileToDataUri(file);
-        const thumb = await generateThumbnail(dataUri);
-        return { dataUri: dataUri, thumbnail: thumb, id: Date.now() + Math.random() };
-    } catch (e) { return null; }
-}
-async function handleFiles(files) {
-    const imgFiles = Array.from(files).filter(function(f) { return f.type.startsWith('image/'); });
-    if (!imgFiles.length) { showToast('Aucune image valide', 'warn'); return; }
-    state.isLoadingImages = true;
-    updateGenerateBtn();
-    setStatus('Chargement de ' + imgFiles.length + ' image(s)…');
-    let processed = 0;
-    for (const f of imgFiles) {
-        const r = await processOneFile(f);
-        if (r) { state.images.push(r); processed++; renderImages(); }
-    }
-    state.isLoadingImages = false;
-    setStatus(null);
-    updateGenerateBtn();
-    showToast(processed + ' image(s) ajoutée(s)', 'success');
-}
-function removeImage(id) {
-    state.images = state.images.filter(function(i) { return i.id !== id; });
-    renderImages();
-    updateGenerateBtn();
-}
-function renderImages() {
-    const grid = document.getElementById('images-grid');
-    if (!grid) return;
-    grid.innerHTML = state.images.map(function(img) {
-        return '<div class="image-card">' +
-            '<img src="' + (img.thumbnail || img.dataUri) + '" alt="">' +
-            '<button class="remove-btn" data-remove="' + img.id + '">✕</button>' +
-            '</div>';
-    }).join('');
-    grid.querySelectorAll('[data-remove]').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            removeImage(parseFloat(btn.dataset.remove));
+        tab.addEventListener('mouseleave', () => {
+          setTimeout(() => deactivateSkillBar(skillId), 80);
         });
-    });
-}
+      });
 
-// ══════════════════════════════════════════════════════════
-// RENDU PRESETS & STYLES
-// ══════════════════════════════════════════════════════════
-function renderPromptPresets() {
-    const c = document.getElementById('prompt-presets');
-    if (!c) return;
-    c.innerHTML = PRESETS.map(function(p, i) {
-        return '<div class="prompt-preset" data-preset="' + i + '">' + esc(p.label) + '</div>';
-    }).join('');
-    c.querySelectorAll('[data-preset]').forEach(function(el) {
-        el.addEventListener('click', function() {
-            const p = PRESETS[parseInt(el.dataset.preset, 10)];
-            if (!p) return;
-            const ta = document.getElementById('main-prompt');
-            ta.value = p.text;
-            state.mainPrompt = p.text;
-            showToast('Exemple appliqué', 'success', 1200);
+      /* =====================================================
+         SURVOL DES CARTES (PHOTOS) → ILLUMINATION DE LA BARRE
+         ===================================================== */
+      cards.forEach(card => {
+        const skillId = card.dataset.skillId;
+
+        card.addEventListener('mouseenter', () => {
+          activateSkillBar(skillId);
         });
-    });
-}
-function renderStyles() {
-    const c = document.getElementById('styles-grid');
-    if (!c) return;
-    let html = '';
-    html += '<div class="no-style ' + (state.selectedEffect === null ? 'selected' : '') + '" data-effect="none">' +
-        (state.selectedEffect === null ? '✓ Aucun effet — votre prompt seul' : '🚫 Aucun effet visuel') + '</div>';
-    html += '<div class="cat-header">✨ Ambiances magiques</div>';
-    html += '<div class="cat-desc">Préserve votre image. Seule l\'ambiance change.</div>';
-    html += AMBIANCE.map(function(s) {
-        return '<div class="style-card ' + (state.selectedEffect === s.id ? 'selected' : '') + '" data-effect="' + s.id + '">' +
-            '<div class="style-emoji">' + s.emoji + '</div>' +
-            '<div><div class="style-name">' + esc(s.name) + '</div>' +
-            '<div class="style-desc">' + esc(s.desc) + '</div></div></div>';
-    }).join('');
-    html += '<div class="cat-header">🎭 Transformations stylistiques</div>';
-    html += '<div class="cat-desc">Transforment radicalement votre image.</div>';
-    html += STYLIZE.map(function(s) {
-        return '<div class="style-card ' + (state.selectedEffect === s.id ? 'selected' : '') + '" data-effect="' + s.id + '">' +
-            '<div class="style-emoji">' + s.emoji + '</div>' +
-            '<div><div class="style-name">' + esc(s.name) + '</div>' +
-            '<div class="style-desc">' + esc(s.desc) + '</div></div></div>';
-    }).join('');
-    c.innerHTML = html;
-    c.querySelectorAll('[data-effect]').forEach(function(el) {
-        el.addEventListener('click', function() {
-            const v = el.dataset.effect;
-            state.selectedEffect = (v === 'none') ? null : v;
-            renderStyles();
+
+        card.addEventListener('mouseleave', () => {
+          setTimeout(() => deactivateSkillBar(skillId), 80);
         });
-    });
-}
+      });
 
-// ══════════════════════════════════════════════════════════
-// PROMPT
-// ══════════════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════════
-// PRÉ-RECADRAGE DE L'IMAGE (au ratio demandé)
-// ══════════════════════════════════════════════════════════
-function preCropImage(dataUri, targetAspect) {
-    return new Promise(function(resolve) {
-        const img = new Image();
-        img.onload = function() {
-            try {
-                const parts = targetAspect.split(':');
-                const targetRatio = parseInt(parts[0]) / parseInt(parts[1]);
-                
-                const imgRatio = img.width / img.height;
-                let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                
-                if (imgRatio > targetRatio) {
-                    sw = img.height * targetRatio;
-                    sx = (img.width - sw) / 2;
-                } else if (imgRatio < targetRatio) {
-                    sh = img.width / targetRatio;
-                    sy = (img.height - sh) / 2;
-                }
-                
-                const canvas = document.createElement('canvas');
-                const targetW = targetRatio < 1 ? 720 : 1280;
-                const targetH = targetRatio < 1 ? 1280 : 720;
-                canvas.width = targetW;
-                canvas.height = targetH;
-                
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
-                
-                const cropped = canvas.toDataURL('image/jpeg', 0.9);
-                console.log('[Fantasy] Image pré-recadrée :', img.width + 'x' + img.height, '→', targetW + 'x' + targetH);
-                resolve(cropped);
-            } catch (e) {
-                console.warn('[Fantasy] Erreur recadrage, image originale utilisée:', e.message);
-                resolve(dataUri);
-            }
-        };
-        img.onerror = function() { resolve(dataUri); };
-        img.src = dataUri;
-    });
-}
-
-function buildPrompt() {
-    const all = AMBIANCE.concat(STYLIZE);
-    const eff = state.selectedEffect ? all.find(function(s) { return s.id === state.selectedEffect; }) : null;
-    const isStylize = eff && STYLIZE.some(function(s) { return s.id === state.selectedEffect; });
-    const hasUser = state.mainPrompt && state.mainPrompt.trim().length > 0;
-    const parts = [];
-
-    if (isStylize) {
-        parts.push('Animate this image as the starting frame. Apply the following style transformation while keeping photographic realism:');
-    } else {
-        parts.push(
-            'Photorealistic animation of this exact photograph. ' +
-            'The subject must remain IDENTICAL to the source image: same face, same features, same skin texture, same clothing, same pose, same identity, same composition, same framing, same lighting. ' +
-            'This is a living photograph, not a re-creation.'
-        );
-    }
-
-       parts.push(
-        'Natural realistic rendering, true-to-life skin and textures, ' +
-        'real-world lighting and shadows, believable physics, ' +
-        'subtle natural movement, minimal but lifelike animation. ' +
-        'IMPORTANT: The video MUST start with the EXACT framing of the source image. ' +
-        'No zoom-in, no crop, no reframe at the beginning. ' +
-        'The camera stays static at the source framing. ' +
-        'Do NOT cut off the top of the subject\'s head. ' +
-        'Preserve the entire original composition from frame 1 to the last frame.'
-    );
-
-       parts.push(
-        'No cartoon, no anime, no painting, no illustration, no 3D render, no CGI look, ' +
-        'no plastic skin, no distortions, no warped anatomy, no extra limbs or fingers, ' +
-        'no text, no watermarks, no AI artifacts, no over-smoothing, no artificial filters. ' +
-        'No initial zoom, no opening push-in, no framing change at start, no head cropping.'
-    );
-
-    if (eff) parts.push(eff.prompt);
-    if (hasUser) parts.push('Additional direction: ' + state.mainPrompt.trim());
-    if (state.framing !== 'random' && FRAMING[state.framing]) parts.push(FRAMING[state.framing]);
-    if (state.intensity !== 'random' && INTENSITY[state.intensity]) parts.push(INTENSITY[state.intensity]);
-    else parts.push('very subtle natural movement');
-
-    parts.push(randomItem(RANDOM_ACTIONS));
-
-    if (state.format === '16:9') {
-        parts.push('Landscape 16:9, no text, no watermarks');
-    } else {
-        parts.push('Portrait 9:16, no text, no watermarks');
-    }
-
-    return parts.join('. ');
-}
-
-// ══════════════════════════════════════════════════════════
-// API AGNES v2.0
-// ══════════════════════════════════════════════════════════
-async function apiFetch(url, options, label) {
-    for (let attempt = 0; attempt < 7; attempt++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        try {
-            const res = await fetch(url, options);
-            if (res.status === 429) {
-                const w = [30, 60, 90, 120, 180, 300, 600][Math.min(attempt, 6)];
-                setStatus('Limite atteinte, attente… (' + w + 's)');
-                await sleep(w * 1000);
-                continue;
-            }
-            if (res.status === 503) {
-                const w = [30, 60, 120, 180, 300, 600][Math.min(attempt, 5)];
-                setStatus('Serveur saturé, nouvelle tentative… (' + w + 's)');
-                await sleep(w * 1000);
-                continue;
-            }
-            return res;
-        } catch (e) {
-            if (e.message === 'Arrêt demandé') throw e;
-            const w = [3, 5, 8, 12, 20, 30][Math.min(attempt, 5)];
-            setStatus('Connexion… (' + w + 's)');
-            await sleep(w * 1000);
-        }
-    }
-    return fetch(url, options);
-}
-
-async function createVideoTask(imageDataUri, prompt) {
-    const n = Math.round((state.durationFrames - 1) / 8);
-    const safeFrames = 8 * n + 1;
-
-    const limit = RESOLUTION_LIMITS[state.resolution] ? RESOLUTION_LIMITS[state.resolution].maxFrames : 481;
-    const finalFrames = Math.min(safeFrames, limit);
-
-    if (finalFrames !== state.durationFrames) {
-        console.warn('[Fantasy] num_frames ajusté :', state.durationFrames, '→', finalFrames, '(' + state.resolution + ')');
-        state.durationFrames = finalFrames;
-    }
-
-    const res = await apiFetch(API_BASE + '/videos', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + getApiKey(),
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: MODEL_VIDEO,
-            prompt: prompt,
-            image: imageDataUri,
-            num_frames: finalFrames,
-            frame_rate: FRAME_RATE
-        })
-    }, 'Création');
-
-    if (!res.ok) {
-        const err = await res.text();
-        throw new Error('HTTP ' + res.status + ' — ' + err.slice(0, 200));
-    }
-    const data = await res.json();
-    const videoId = data.video_id || data.id || data.task_id;
-    if (!videoId) throw new Error('Pas de video_id');
-    return videoId;
-}
-
-async function pollVideo(videoId, onProgress) {
-    const estSec = 30;
-    for (let r = estSec; r > 0; r--) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        onProgress('Vidéo en préparation… — ' + r + 's');
-        await sleep(1000);
-    }
-    for (let i = 0; i < MAX_POLL_ATTEMPTS; i++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        if (i > 0) {
-            for (let r = POLL_INTERVAL_SEC; r > 0; r--) {
-                if (state.stopRequested) throw new Error('Arrêt demandé');
-                onProgress('L\'image prend vie… — ' + r + 's');
-                await sleep(1000);
-            }
-        }
-        const url = POLL_BASE + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
-        const res = await apiFetch(url, {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + getApiKey() }
-        }, 'Polling');
-        const d = await res.json();
-        const status = d.status || 'unknown';
-        const progress = d.progress || 0;
-        onProgress('Création… — ' + progress + '%');
-        if (status === 'completed' || status === 'succeeded' || status === 'done') {
-            const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-            if (!videoUrl) throw new Error('Terminé mais pas d\'URL');
-            return videoUrl;
-        }
-        if (status === 'failed' || status === 'error' || status === 'cancelled') {
-            throw new Error('Échec (' + status + ')');
-        }
-    }
-    throw new Error('Délai dépassé');
-}
-
-// ══════════════════════════════════════════════════════════
-// FILE D'ATTENTE & GALERIE
-// ══════════════════════════════════════════════════════════
-function renderQueue() {
-    const q = document.getElementById('queue');
-    if (!q) return;
-    if (!state.queue.length) { q.style.display = 'none'; return; }
-    q.style.display = 'block';
-    const total = state.queue.length;
-    const done = state.completed + state.failed;
-    let html = '<div class="queue-item"><div><strong>Progression :</strong> ' + done + '/' + total + '</div></div>';
-    html += state.queue.map(function(item) {
-        let icon = '○', txt = 'En attente', cls = '';
-        if (item.status === 'creating') { icon = '◐'; txt = 'Préparation…'; cls = 'processing'; }
-        else if (item.status === 'processing') { icon = '◐'; txt = item.progress || 'En cours'; cls = 'processing'; }
-        else if (item.status === 'done') { icon = '●'; txt = 'Terminé'; cls = 'done'; }
-        else if (item.status === 'failed') { icon = '✕'; txt = 'Échec'; cls = 'failed'; }
-        return '<div class="queue-item ' + cls + '">' +
-            '<span>' + icon + '</span>' +
-            '<span>Image ' + (item.imageIndex + 1) + '</span>' +
-            '<span class="q-status">' + esc(txt) + '</span>' +
-            '</div>';
-    }).join('');
-    q.innerHTML = html;
-}
-
-function addToGallery(url, label) {
-    const g = document.getElementById('gallery');
-    const grid = document.getElementById('gallery-grid');
-    g.style.display = 'block';
-    const el = document.createElement('div');
-    el.className = 'gallery-item';
-    el.innerHTML = '<video controls preload="metadata" muted playsinline><source src="' + url + '" type="video/mp4"></video>' +
-        '<div class="g-caption">' + esc(label) + '</div>';
-    grid.appendChild(el);
-}
-
-// ══════════════════════════════════════════════════════════
-// PIPELINE
-// ══════════════════════════════════════════════════════════
-async function createTaskOnly(item) {
-    item.status = 'creating';
-    item.progress = 'Préparation…';
-    renderQueue();
-    
-    // 🎯 Pré-recadrage au bon ratio avant envoi à l'API
-    const croppedImage = await preCropImage(item.image.dataUri, state.format);
-    
-    const prompt = buildPrompt();
-    const videoId = await createVideoTask(croppedImage, prompt);
-    item.videoId = videoId;
-    item.startTime = Date.now();
-    item.status = 'processing';
-    item.progress = 'En cours…';
-    renderQueue();
-    return videoId;
-}
-
-async function pollTaskAndDisplay(item) {
-    try {
-        const url = await pollVideo(item.videoId, function(p) {
-            item.progress = p;
-            renderQueue();
+      /* on quitte la barre elle-même : on enlève aussi l'état actif (sauf si onglet/carte survolés) */
+      document.querySelectorAll('.skill-item').forEach(item => {
+        item.addEventListener('mouseleave', () => {
+          const id = item.id.replace('skill-item-', '');
+          deactivateSkillBar(id);
         });
-        item.status = 'done';
-        item.videoUrl = url;
-        item.progress = 'Terminé';
-        state.completed++;
-        renderQueue();
-        updateGenerateBtn();
-        addToGallery(url, 'Image ' + (item.imageIndex + 1));
-    } catch (e) {
-        if (e.message === 'Arrêt demandé') {
-            item.status = 'failed'; item.progress = 'Arrêté';
-        } else {
-            item.status = 'failed'; item.progress = 'Échec';
-            state.failed++;
-        }
-        renderQueue();
-        updateGenerateBtn();
-    }
-}
+      });
 
-async function startGeneration() {
-    if (state.isRunning || !state.images.length) return;
-    if (!getApiKey()) {
-        showToast('Ajoutez d\'abord votre clé API', 'error');
-        return;
-    }
-    state.mainPrompt = document.getElementById('main-prompt').value.trim();
-    if (!state.mainPrompt && !state.selectedEffect) {
-        if (!confirm('Ni prompt ni effet. Continuer avec un style aléatoire ?')) return;
-    }
-    state.isRunning = true;
-    state.stopRequested = false;
-    state.completed = 0;
-    state.failed = 0;
-    createIntervalMs = CREATE_INTERVAL_MIN;
-    state.queue = state.images.map(function(img, i) {
-        return {
-            imageIndex: i, image: img, status: 'pending', progress: null,
-            videoId: null, videoUrl: null, startTime: null
-        };
-    });
-    document.getElementById('gallery-grid').innerHTML = '';
-    document.getElementById('gallery').style.display = 'none';
-    document.getElementById('stop-btn').classList.add('visible');
-    document.getElementById('generate-btn').disabled = true;
-    renderQueue();
-    updateGenerateBtn();
-
-    const polling = [];
-    try {
-        for (let i = 0; i < state.queue.length; i++) {
-            if (state.stopRequested) break;
-            const item = state.queue[i];
-            try {
-                await createTaskOnly(item);
-                polling.push(pollTaskAndDisplay(item));
-            } catch (e) {
-                if (e.message === 'Arrêt demandé') break;
-                log('Échec création : ' + e.message);
-                item.status = 'failed'; item.progress = 'Échec';
-                state.failed++;
-                renderQueue();
-                updateGenerateBtn();
-            }
-            if (i < state.queue.length - 1 && !state.stopRequested) {
-                const w = Math.ceil(createIntervalMs / 1000);
-                for (let r = w; r > 0; r--) {
-                    if (state.stopRequested) break;
-                    setStatus('Respiration créative… — Image ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
-                    await sleep(1000);
-                }
-            }
-        }
-        if (polling.length) {
-            setStatus('Finalisation…');
-            await Promise.allSettled(polling);
-        }
-    } catch (e) {
-        log('Erreur globale : ' + e.message);
-    }
-
-    setStatus(state.completed + '/' + state.queue.length + ' vidéos créées');
-    await sleep(4000);
-    setStatus(null);
-    state.isRunning = false;
-    state.stopRequested = false;
-    document.getElementById('stop-btn').classList.remove('visible');
-    updateGenerateBtn();
-    showToast(state.completed + ' vidéo(s) créée(s)', 'success');
-}
-
-function stopGeneration() {
-    if (!state.isRunning) return;
-    state.stopRequested = true;
-    setStatus('Arrêt en cours…');
-}
-
-// ══════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════
-(function init() {
-    console.log('[Fantasy] Init…');
-
-    const saveBtn = document.getElementById('api-save-btn');
-    if (saveBtn) saveBtn.addEventListener('click', saveApiKey);
-
-    const apiInput = document.getElementById('api-key-input');
-    if (apiInput) apiInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
-    });
-
-    const stopBtn = document.getElementById('stop-btn');
-    if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
-
-    document.querySelectorAll('[data-toggle]').forEach(function(h) {
-        h.addEventListener('click', function() {
-            document.getElementById(h.dataset.toggle).classList.toggle('open');
+      /* =====================================================
+         CLIC SUR LES ONGLETS (scroll vers la carte)
+         ===================================================== */
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.dataset.target;
+          const targetCard = document.getElementById(targetId);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.style.transition = '0.1s';
+            targetCard.style.boxShadow = '0 0 100px #f0ffb0, 0 0 150px #b3ff66';
+            targetCard.style.borderColor = '#fff9b0';
+            setTimeout(() => {
+              targetCard.style.boxShadow = '';
+              targetCard.style.borderColor = '';
+            }, 600);
+          }
         });
-    });
+      });
 
-    const zone = document.getElementById('upload-zone');
-    const input = document.getElementById('file-input');
-    if (zone && input) {
-        zone.addEventListener('click', function(e) {
-            if (e.target !== input) input.click();
+      /* animation initiale au chargement */
+      window.addEventListener('load', () => {
+        const fills = document.querySelectorAll('.skill-bar-fill');
+        fills.forEach(fill => {
+          const finalWidth = fill.style.width;
+          fill.dataset.width = finalWidth;
+          fill.style.width = '0%';
+          setTimeout(() => {
+            fill.style.width = finalWidth;
+          }, 300);
         });
-        input.addEventListener('change', function(e) {
-            handleFiles(e.target.files);
-            input.value = '';
-        });
-    }
+      });
 
-    const mainPrompt = document.getElementById('main-prompt');
-    if (mainPrompt) mainPrompt.addEventListener('input', function(e) {
-        state.mainPrompt = e.target.value;
-    });
+      /* flash lumineux bouton youtube */
+      const ytBtn = document.querySelector('.youtube-btn');
+      ytBtn.addEventListener('mouseenter', () => {
+        document.querySelector('.flash').style.background = 'radial-gradient(circle at 50% 50%, rgba(255, 255, 200, 0.25) 0%, transparent 80%)';
+      });
+      ytBtn.addEventListener('mouseleave', () => {
+        document.querySelector('.flash').style.background = 'radial-gradient(circle at 30% 40%, rgba(255, 255, 200, 0.08) 0%, transparent 70%)';
+      });
 
-    const fmt = document.getElementById('format-select');
-    if (fmt) fmt.addEventListener('change', function(e) { state.format = e.target.value; });
+      document.querySelectorAll('a, .tab, .passion-card').forEach(el => {
+        el.style.cursor = 'none';
+      });
 
-    const resSelect = document.getElementById('resolution-select');
-    if (resSelect) {
-        resSelect.addEventListener('change', function(e) {
-            state.resolution = e.target.value;
-            renderDurationOptions(state.resolution);
-        });
-    }
-
-    const dur = document.getElementById('duration-select');
-    if (dur) dur.addEventListener('change', function(e) { state.durationFrames = parseInt(e.target.value, 10); });
-
-    const fr = document.getElementById('framing-select');
-    if (fr) fr.addEventListener('change', function(e) { state.framing = e.target.value; });
-    const it = document.getElementById('intensity-select');
-    if (it) it.addEventListener('change', function(e) { state.intensity = e.target.value; });
-
-    const genBtn = document.getElementById('generate-btn');
-    if (genBtn) genBtn.addEventListener('click', startGeneration);
-
-    updateApiPanel();
-    renderPromptPresets();
-    renderStyles();
-    renderImages();
-    renderQueue();
-
-    // MODE LÉGER
-    const lightModeBtn = document.getElementById('light-mode-btn');
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const savedLightMode = localStorage.getItem('fantasy_light_mode');
-
-    if (savedLightMode === '1' || (savedLightMode === null && isMobileDevice)) {
-        document.body.classList.add('light-mode');
-        if (lightModeBtn) lightModeBtn.textContent = '✨ Désactiver le mode léger';
-    }
-
-    if (lightModeBtn) {
-        lightModeBtn.addEventListener('click', function() {
-            const isActive = document.body.classList.toggle('light-mode');
-            lightModeBtn.textContent = isActive ? '✨ Désactiver le mode léger' : '⚡ Activer le mode léger';
-            localStorage.setItem('fantasy_light_mode', isActive ? '1' : '0');
-            showToast(isActive ? 'Mode léger activé' : 'Mode complet activé', 'success', 1500);
-        });
-    }
-
-    // Initialise le menu des durées selon la qualité par défaut
-    renderDurationOptions(state.resolution);
-
-    console.log('[Fantasy] Prêt.');
-})();
-</script>
-
+    })();
+  </script>
 </body>
 </html>
